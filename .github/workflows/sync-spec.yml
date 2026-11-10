@@ -1,0 +1,53 @@
+name: Sync spec
+
+on:
+  schedule:
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Fetch the OpenAPI spec
+        run: |
+          tmp="$(mktemp)"
+          curl --fail --silent --show-error https://versedb.com/api/v1/openapi.json -o "$tmp"
+          jq . "$tmp" > openapi.json
+
+      - name: Fetch the Postman collection
+        run: |
+          tmp="$(mktemp)"
+          curl --fail --silent --show-error https://versedb.com/api/docs.postman -o "$tmp"
+          jq . "$tmp" > postman.json
+
+      - name: Check both files are complete
+        run: |
+          operations="$(jq '[.paths[] | to_entries[] | select(.key | IN("get", "put", "post", "delete", "options", "head", "patch", "trace"))] | length' openapi.json)"
+          requests="$(jq '[.. | objects | select(has("request"))] | length' postman.json)"
+          echo "openapi.json: $operations operations, postman.json: $requests requests"
+          if [ "$operations" -lt 50 ]; then
+            echo "::error::openapi.json has $operations operations, expected at least 50"
+            exit 1
+          fi
+          if [ "$requests" -lt "$operations" ]; then
+            echo "::error::postman.json has $requests requests, fewer than the spec's $operations operations"
+            exit 1
+          fi
+
+      - name: Commit changes
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add openapi.json postman.json
+          git commit -m "Update the spec from versedb.com"
+          git push origin HEAD:main
