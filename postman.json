@@ -1,0 +1,4837 @@
+{
+  "variable": [
+    {
+      "id": "baseUrl",
+      "key": "baseUrl",
+      "type": "string",
+      "name": "string",
+      "value": "https://versedb.com"
+    }
+  ],
+  "info": {
+    "name": "VerseDB API Documentation",
+    "_postman_id": "606b59d3-922d-43aa-5b48-b47d5d389962",
+    "description": "REST API for accessing comic book data, managing collections, and building integrations with VerseDB.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Discovery",
+      "description": "\nDynamic content discovery endpoints for the home screen and new releases.\n\nThese endpoints provide curated and time-sensitive content like upcoming releases,\nFOC (Final Order Cutoff) deadlines, and new first issues.",
+      "item": [
+        {
+          "name": "FOC deadlines.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/discovery/foc",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Results per page (1-50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "days",
+                  "value": "7",
+                  "description": "FOC window in days (1-30).",
+                  "disabled": true
+                },
+                {
+                  "key": "start_date",
+                  "value": "2026-03-15",
+                  "description": "Start of FOC window (YYYY-MM-DD). Defaults to today.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "1,4",
+                  "description": "Comma-separated publisher IDs; matches issues from any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "foc_date",
+                  "description": "foc_date (default: FOC date, then publisher, then series name), publisher (publisher, then FOC date, then series name) or series (series name, then FOC date).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/discovery/foc",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns issues with Final Order Cutoff (FOC) deadline within the next N days.\nFOC is when retailers must place final orders with distributors (typically 2 weeks before release)."
+          },
+          "response": []
+        },
+        {
+          "name": "Follow updates.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/discovery/follow-updates",
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30",
+                  "description": "Lookback window in days (1-90).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number for pagination.",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (1-50).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/discovery/follow-updates",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns recent releases from the titles, characters, creators, and teams the user\nfollows. A Series is not followable — it reaches this feed through its Title, and\nevery volume of that title counts.\n\n`follow_contexts` and `follow_types` are top-level maps keyed by issue id: the\ncontext explains why the issue is shown (\"New in X-Men\"), the type is one of\n`title`, `character`, `creator`, `team`."
+          },
+          "response": []
+        },
+        {
+          "name": "Upcoming #1 issues.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/discovery/upcoming-firsts",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Results per page (1-50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "days",
+                  "value": "60",
+                  "description": "Lookahead window in days (1-90).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/discovery/upcoming-firsts",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns upcoming first issues (#1) from new ongoing series within the next N days.\nUseful for discovering new series launches."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Titles",
+      "description": "\nEndpoints for browsing comic book titles (franchises/properties).\n\nA title represents a franchise (e.g., \"Batman\"), which may have multiple series under it.",
+      "item": [
+        {
+          "name": "Get a specific title",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/titles/:title_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/titles/:title_id",
+              "variable": [
+                {
+                  "id": "title_id",
+                  "key": "title_id",
+                  "value": "7",
+                  "description": "The ID of the title."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, slug, start_year, end_year, status, type,\nimage_url, content_rating_label, min_age, is_nsfw, imprint_id, series_count,\nissues_count, average_rating, aliases\n\nUse relationship endpoints for richer data:\n- /titles/{id}/series - Get series in a title\n- /titles/{id}/issues - Get issues across all series in a title\n- /titles/{id}/creators - Get creators credited on the title\n- /titles/{id}/characters - Get characters associated with the title\n- /titles/{id}/teams - Get teams associated with the title"
+          },
+          "response": []
+        },
+        {
+          "name": "List titles",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/titles",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider-man",
+                  "description": "Search by title name.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_id",
+                  "value": "1",
+                  "description": "Filter by publisher ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher",
+                  "value": "1",
+                  "description": "Deprecated alias for publisher_id, kept for existing callers.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "1,4",
+                  "description": "Comma-separated publisher IDs. Returns a title published by any one of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "hide_unreleased",
+                  "value": "true",
+                  "description": "Return only titles whose start year has already arrived.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "manga",
+                  "description": "Return titles with a series in this medium: comic, manga, manhwa, manhua, bande_dessinee or magazine.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "en,ja",
+                  "description": "Comma-separated language codes. Returns titles with a series in any one of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "ongoing",
+                  "value": "true",
+                  "description": "Return only titles with an ongoing series. Combined with medium or languages, that same series has to match them.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "start_year",
+                  "description": "Sort field. One of name, start_year, average_rating, cached_series_count, cached_issues_count; anything else falls back to name. Passing sort replaces the relevance ordering applied to q results.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction, asc or desc. Anything else falls back to asc.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/titles",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, slug, start_year, end_year, status, type, image_url,\ncontent_rating_label, min_age, is_nsfw, series_count, issues_count,\naverage_rating, total_reviews"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Series",
+      "description": "\nEndpoints for browsing and searching comic book series.\n\nA series represents a specific volume or run of a title (e.g., \"Amazing Spider-Man (2018)\").",
+      "item": [
+        {
+          "name": "List series.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/series",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider-man",
+                  "description": "Search by series name.",
+                  "disabled": true
+                },
+                {
+                  "key": "title_id",
+                  "value": "1",
+                  "description": "Filter by title ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_id",
+                  "value": "1",
+                  "description": "Filter by publisher ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "Ongoing",
+                  "description": "Filter by series status (Ongoing, Completed, Canceled).",
+                  "disabled": true
+                },
+                {
+                  "key": "genre_ids",
+                  "value": "3,11",
+                  "description": "Comma-separated genre IDs. Returns a series carrying any one of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "1,4",
+                  "description": "Comma-separated publisher IDs. Returns a series published by any one of them; use this instead of publisher_id to pass more than one.",
+                  "disabled": true
+                },
+                {
+                  "key": "creator_ids",
+                  "value": "812,1907",
+                  "description": "Comma-separated creator IDs. Returns a series credited to any one of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "character_ids",
+                  "value": "55,204",
+                  "description": "Comma-separated character IDs. Returns a series any one of them appears in.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "en,ja",
+                  "description": "Comma-separated ISO 639-1 language codes. Returns a series published in any one of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "manga",
+                  "description": "Filter by medium (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "publication_type",
+                  "value": "limited_series",
+                  "description": "Filter by publication type (regular_series, limited_series, one_shot, graphic_novel, graphic_novel_series, collected_edition, special).",
+                  "disabled": true
+                },
+                {
+                  "key": "format",
+                  "value": "Omnibus",
+                  "description": "Filter by physical format (Standard, Deluxe, Omnibus, TPB, Hardcover, Other).",
+                  "disabled": true
+                },
+                {
+                  "key": "start_year",
+                  "value": "2018",
+                  "description": "Filter by the year the series began.",
+                  "disabled": true
+                },
+                {
+                  "key": "end_year",
+                  "value": "2022",
+                  "description": "Filter by the year the series ended.",
+                  "disabled": true
+                },
+                {
+                  "key": "decade",
+                  "value": "1990s",
+                  "description": "Filter by the decade the series began, written as a four-digit year ending in s. Accepts 1900s through the current decade.",
+                  "disabled": true
+                },
+                {
+                  "key": "hide_unreleased",
+                  "value": "true",
+                  "description": "Return only series whose start year has already arrived.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "start_year",
+                  "description": "Sort field (name, start_year, average_rating, latest_release_date, cached_issues_count).",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/series",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated series with optional search and filtering."
+          },
+          "response": []
+        },
+        {
+          "name": "Get series issues.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/series/:id/issues",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "247",
+                  "description": "Search within this series' issues (number, name).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "issue_number",
+                  "description": "Sort field (issue_number, release_date, name).",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "asc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/series/:id/issues",
+              "variable": [
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "123",
+                  "description": "The series ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated issues for a specific series."
+          },
+          "response": []
+        },
+        {
+          "name": "Get series details.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/series/:series_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/series/:series_id",
+              "variable": [
+                {
+                  "id": "series_id",
+                  "key": "series_id",
+                  "value": "123",
+                  "description": "The series ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a single series with full details including related title, publishers, and genres.\nFor relationship data (issues, creators, characters), use the relationship endpoints."
+          },
+          "response": []
+        },
+        {
+          "name": "Get series creators.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/series/:id/creators",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/series/:id/creators",
+              "variable": [
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "123",
+                  "description": "The series ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated creators associated with a specific series."
+          },
+          "response": []
+        },
+        {
+          "name": "Get series characters.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/series/:id/characters",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/series/:id/characters",
+              "variable": [
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "123",
+                  "description": "The series ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated characters appearing in a specific series."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "description": "\nEndpoints for browsing and searching comic book issues.\n\nAn issue is a single publication in a series (e.g., \"Amazing Spider-Man #1\").",
+      "item": [
+        {
+          "name": "Get issue variants.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/variants",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/variants",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns all variant covers for a specific issue."
+          },
+          "response": []
+        },
+        {
+          "name": "Get issue details.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a single issue with full details including series, title, publishers,\ncreators, characters, teams, and story arcs."
+          },
+          "response": []
+        },
+        {
+          "name": "List issues.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider",
+                  "description": "Search by issue name.",
+                  "disabled": true
+                },
+                {
+                  "key": "series_id",
+                  "value": "123",
+                  "description": "Filter by series ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_id",
+                  "value": "1",
+                  "description": "Filter by publisher ID (via series relationship).",
+                  "disabled": true
+                },
+                {
+                  "key": "release_date_from",
+                  "value": "2024-01-01",
+                  "description": "Filter by release date (from).",
+                  "disabled": true
+                },
+                {
+                  "key": "release_date_to",
+                  "value": "2024-12-31",
+                  "description": "Filter by release date (to).",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "1,2",
+                  "description": "Comma-separated publisher IDs; matches issues from any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "series_ids",
+                  "value": "123,456",
+                  "description": "Comma-separated series IDs; matches issues in any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "title_ids",
+                  "value": "45",
+                  "description": "Comma-separated title (franchise) IDs; matches issues whose series belongs to any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "character_ids",
+                  "value": "1,2",
+                  "description": "Comma-separated character IDs, up to 10; an issue must feature every one.",
+                  "disabled": true
+                },
+                {
+                  "key": "creator_ids",
+                  "value": "81",
+                  "description": "Comma-separated creator IDs, up to 10; an issue must credit every one.",
+                  "disabled": true
+                },
+                {
+                  "key": "creator_role_ids",
+                  "value": "1,2",
+                  "description": "Comma-separated creator role IDs; with creator_ids, each creator must be credited in one of these roles.",
+                  "disabled": true
+                },
+                {
+                  "key": "team_ids",
+                  "value": "5",
+                  "description": "Comma-separated team IDs, up to 10; an issue must feature every one.",
+                  "disabled": true
+                },
+                {
+                  "key": "genre_ids",
+                  "value": "3",
+                  "description": "Comma-separated genre IDs; matches issues whose series carries any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "en,ja",
+                  "description": "Comma-separated series language codes (en, ja, fr, ...).",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "manga",
+                  "description": "Series medium (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "key_issues_only",
+                  "value": "true",
+                  "description": "Only return issues with at least one key issue reason.",
+                  "disabled": true
+                },
+                {
+                  "key": "hide_unreleased",
+                  "value": "true",
+                  "description": "Leave out issues whose release date is in the future.",
+                  "disabled": true
+                },
+                {
+                  "key": "include",
+                  "value": "series",
+                  "description": "Comma-separated relationships to include (series).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "release_date",
+                  "description": "Sort field (issue_number, release_date, name).",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated issues with optional search, filtering, and sorting."
+          },
+          "response": []
+        },
+        {
+          "name": "Get variant details.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/variants/:variant_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/variants/:variant_id",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                },
+                {
+                  "id": "variant_id",
+                  "key": "variant_id",
+                  "value": "9001",
+                  "description": "The variant ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a specific variant cover with full details."
+          },
+          "response": []
+        },
+        {
+          "name": "Get key issue reasons.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/key-reasons",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/key-reasons",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns key issue reasons for a specific issue (e.g., \"1st Appearance\", \"Death\")."
+          },
+          "response": []
+        },
+        {
+          "name": "Get issue creators.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:id/creators",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:id/creators",
+              "variable": [
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated creators for a specific issue with their roles."
+          },
+          "response": []
+        },
+        {
+          "name": "Get issue characters.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:id/characters",
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:id/characters",
+              "variable": [
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated characters appearing in a specific issue."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Publishers",
+      "description": "\nEndpoints for browsing comic book publishers.",
+      "item": [
+        {
+          "name": "Get publisher details",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/publishers/:publisher_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/publishers/:publisher_id",
+              "variable": [
+                {
+                  "id": "publisher_id",
+                  "key": "publisher_id",
+                  "value": "1",
+                  "description": "The ID of the publisher."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, founded_year, first_published_year,\nwebsite, headquarters, parent_company, status, logo_url, aliases\n\nUse the related endpoints for relationship data:\n- /series?publisher_id={id} - Get series by publisher\n- /publishers/{id}/characters - Get characters by publisher"
+          },
+          "response": []
+        },
+        {
+          "name": "List all publishers with optional search",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/publishers",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "marvel",
+                  "description": "Search by publisher name.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "manga",
+                  "description": "Filter by primary medium (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "cached_issues_count",
+                  "description": "Sort field (name, founded_year, cached_titles_count, cached_series_count, cached_issues_count). Passing sort replaces the relevance ordering applied to q results.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/publishers",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, founded_year, headquarters, status, logo_url"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Imprints",
+      "description": "\nEndpoints for browsing comic book imprints (publisher sub-brands, e.g.,\nVertigo under DC, Icon under Marvel).",
+      "item": [
+        {
+          "name": "Get imprint details",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/imprints/:imprint_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/imprints/:imprint_id",
+              "variable": [
+                {
+                  "id": "imprint_id",
+                  "key": "imprint_id",
+                  "value": "1",
+                  "description": "The ID of the imprint."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, slug, publisher, series_count, titles_count"
+          },
+          "response": []
+        },
+        {
+          "name": "List imprints",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/imprints",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "vertigo",
+                  "description": "Search by imprint name, tolerating small typos.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_id",
+                  "value": "2",
+                  "description": "Filter by publisher ID.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/imprints",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name, slug, publisher"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Creators",
+      "description": "\nEndpoints for browsing and searching comic book creators.\n\nCreators include writers, artists, colorists, letterers, editors, and other roles.",
+      "item": [
+        {
+          "name": "List creators.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/creators",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "alan moore",
+                  "description": "Search by creator name.",
+                  "disabled": true
+                },
+                {
+                  "key": "role_ids",
+                  "value": "1,3",
+                  "description": "Comma-separated creator role IDs. Returns creators with any of them as a primary role or on a credit.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "name",
+                  "description": "Pass any value to replace the relevance ordering applied to q results with the name.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/creators",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated creators by name, with optional search and a role filter."
+          },
+          "response": []
+        },
+        {
+          "name": "Get creator details.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/creators/:creator_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/creators/:creator_id",
+              "variable": [
+                {
+                  "id": "creator_id",
+                  "key": "creator_id",
+                  "value": "789",
+                  "description": "The creator ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a single creator with full details including role and awards."
+          },
+          "response": []
+        },
+        {
+          "name": "Get creator's issues.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/creators/:creator_id/issues",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/creators/:creator_id/issues",
+              "variable": [
+                {
+                  "id": "creator_id",
+                  "key": "creator_id",
+                  "value": "789",
+                  "description": "The creator ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated issues where the creator has a credit."
+          },
+          "response": []
+        },
+        {
+          "name": "Get creator's series.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/creators/:creator_id/series",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/creators/:creator_id/series",
+              "variable": [
+                {
+                  "id": "creator_id",
+                  "key": "creator_id",
+                  "value": "789",
+                  "description": "The creator ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated series where the creator has worked. `creator_issues_count` is how many\nof the series' issues credit this creator; `cached_issues_count` is the whole series.\nA series credited to the creator without any issue credits reports 0."
+          },
+          "response": []
+        },
+        {
+          "name": "Get creator's blog posts.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/creators/:creator_id/blog-posts",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/creators/:creator_id/blog-posts",
+              "variable": [
+                {
+                  "id": "creator_id",
+                  "key": "creator_id",
+                  "value": "789",
+                  "description": "The creator ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated published blog posts where this creator is featured."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Characters",
+      "description": "\nEndpoints for browsing and searching comic book characters.\n\nCharacters include heroes, villains, and supporting characters across all publishers.",
+      "item": [
+        {
+          "name": "List characters.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider-man",
+                  "description": "Search by character name. Without a search hit, matches the name or real name containing it.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_ids",
+                  "value": "1,2",
+                  "description": "Comma-separated publisher IDs. Returns characters published by any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "roles",
+                  "value": "hero",
+                  "description": "Comma-separated character roles (name or slug, such as hero or villain). Returns characters with any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "powers",
+                  "value": "flight",
+                  "description": "Comma-separated power slugs. Returns characters with any of them.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "name",
+                  "description": "Pass any value to replace the relevance ordering applied to q results with the name.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated characters by name, with optional search and filters."
+          },
+          "response": []
+        },
+        {
+          "name": "Get character details.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "456",
+                  "description": "The character ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a single character with full details including publishers and cached relationship counts (appearances, series, teams, story arcs) so clients can decide which related-entity tabs to expose."
+          },
+          "response": []
+        },
+        {
+          "name": "Get character series.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id/series",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id/series",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "456",
+                  "description": "The character ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated series where the character appears."
+          },
+          "response": []
+        },
+        {
+          "name": "Get character issues.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id/issues",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id/issues",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "456",
+                  "description": "The character ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated issues where the character appears, ordered by release date."
+          },
+          "response": []
+        },
+        {
+          "name": "Get character teams.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id/teams",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id/teams",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "456",
+                  "description": "The character ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated teams the character is a member of, including membership details."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Teams",
+      "description": "\nEndpoints for browsing superhero teams and their members.",
+      "item": [
+        {
+          "name": "List all teams with optional search",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/teams",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "avengers",
+                  "description": "Search by team name.",
+                  "disabled": true
+                },
+                {
+                  "key": "character_ids",
+                  "value": "55,204",
+                  "description": "Comma-separated character IDs. Returns a team every one of them has been a member of.",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "Filter by status: active (never disbanded) or disbanded.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "cached_characters_count",
+                  "description": "Sort field (name, formation_date, cached_characters_count, cached_issues_count). Passing sort replaces the relevance ordering applied to q results.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/teams",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a paginated list of teams. Use `q` to search by team name."
+          },
+          "response": []
+        },
+        {
+          "name": "Get a specific team",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/teams/:team_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/teams/:team_id",
+              "variable": [
+                {
+                  "id": "team_id",
+                  "key": "team_id",
+                  "value": "78",
+                  "description": "The ID of the team."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns team details without relationship data.\nUse the relationship endpoints for related data:\n- /teams/{id}/characters - Get team members\n- /teams/{id}/series - Get team's series appearances\n- /teams/{id}/issues - Get team's issue appearances"
+          },
+          "response": []
+        },
+        {
+          "name": "Get characters for a specific team (members)",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/teams/:team_id/characters",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "uncanny",
+                  "description": "Optional search within the team's members. Results come back in relevance order unless sort is passed.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "cached_issues_count",
+                  "description": "Sort field (name, cached_issues_count, joined_date). Defaults to name.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/teams/:team_id/characters",
+              "variable": [
+                {
+                  "id": "team_id",
+                  "key": "team_id",
+                  "value": "78",
+                  "description": "The ID of the team."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the team's character roster, by name unless sort says otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Get series for a specific team",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/teams/:team_id/series",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "uncanny",
+                  "description": "Optional search within the team's series. Results come back in relevance order unless sort is passed.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "start_year",
+                  "description": "Sort field (start_year, name, cached_issues_count, average_rating, latest_release_date). Defaults to start_year.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/teams/:team_id/series",
+              "variable": [
+                {
+                  "id": "team_id",
+                  "key": "team_id",
+                  "value": "10",
+                  "description": "The team ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the series the team appears in, newest start year first unless sort says otherwise."
+          },
+          "response": []
+        },
+        {
+          "name": "Get issues for a specific team",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/teams/:team_id/issues",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "uncanny",
+                  "description": "Optional search within the team's issues. Results come back in relevance order unless sort is passed.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "release_date",
+                  "description": "Sort field (release_date, cover_date, average_rating). Defaults to release_date.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "desc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "medium",
+                  "value": "comic,manga",
+                  "description": "Comma-separated series mediums to filter by (comic, manga, manhwa, manhua, bande_dessinee, magazine).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/teams/:team_id/issues",
+              "variable": [
+                {
+                  "id": "team_id",
+                  "key": "team_id",
+                  "value": "10",
+                  "description": "The team ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the issues the team appears in, newest release first unless sort says otherwise."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Story Arcs",
+      "description": "\nEndpoints for browsing story arcs and crossover events.",
+      "item": [
+        {
+          "name": "List all story arcs with optional search",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/story-arcs",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "civil war",
+                  "description": "Search by story arc name.",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ended",
+                  "description": "Filter by status (active, ended, upcoming, cancelled).",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "crossover_event",
+                  "description": "Filter by type (main_story, side_story, tie_in_arc, mini_series_arc, crossover_event, prelude, epilogue, other).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "name",
+                  "description": "Pass any value to replace the relevance ordering applied to q results with the name.",
+                  "disabled": true
+                },
+                {
+                  "key": "direction",
+                  "value": "asc",
+                  "description": "Sort direction (asc, desc).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/story-arcs",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a paginated list of story arcs and crossover events by name. Narrow the results with `q`, `status`, or `type`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get story arcs for a specific issue",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/story-arcs",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/story-arcs",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns every story arc the given issue is part of."
+          },
+          "response": []
+        },
+        {
+          "name": "Get story arc detail.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/story-arcs/:storyArc_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/story-arcs/:storyArc_id",
+              "variable": [
+                {
+                  "id": "storyArc_id",
+                  "key": "storyArc_id",
+                  "value": "16",
+                  "description": "The story arc ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns full story arc detail with the primary and secondary universes, a denormalized characters count, the start/end issue summaries (each with its parent series)."
+          },
+          "response": []
+        },
+        {
+          "name": "Get story arcs for a specific universe",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/universes/:universe_id/story-arcs",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "crisis",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/universes/:universe_id/story-arcs",
+              "variable": [
+                {
+                  "id": "universe_id",
+                  "key": "universe_id",
+                  "value": "1",
+                  "description": "The universe ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns every story arc that takes place in the given universe."
+          },
+          "response": []
+        },
+        {
+          "name": "Get story arcs for a specific character",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id/story-arcs",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id/story-arcs",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "35939",
+                  "description": "The ID of the character."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns every story arc the given character appears in."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Universes",
+      "description": "\nEndpoints for browsing comic book universes (e.g., Marvel Universe, DC New 52).",
+      "item": [
+        {
+          "name": "List universes",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/universes",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "marvel",
+                  "description": "Search by universe name.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/universes",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name"
+          },
+          "response": []
+        },
+        {
+          "name": "Get a specific universe",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/universes/:universe_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/universes/:universe_id",
+              "variable": [
+                {
+                  "id": "universe_id",
+                  "key": "universe_id",
+                  "value": "1",
+                  "description": "The ID of the universe."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns: id, name\n\nUse the relationship endpoints for related data:\n- /universes/{id}/story-arcs - Get story arcs in a universe\n- /universes/{id}/characters - Get characters in a universe"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "description": "\nEndpoints for browsing comic conventions and store events.",
+      "item": [
+        {
+          "name": "List events.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "comic-con",
+                  "description": "Search by event name, city or venue, tolerating small typos for upcoming events. Results are ordered by relevance unless `sort` is set.",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "convention",
+                  "description": "Filter by type (convention or store_event).",
+                  "disabled": true
+                },
+                {
+                  "key": "upcoming",
+                  "value": "true",
+                  "description": "Only show upcoming events.",
+                  "disabled": true
+                },
+                {
+                  "key": "past",
+                  "value": "true",
+                  "description": "Only show past events.",
+                  "disabled": true
+                },
+                {
+                  "key": "is_online",
+                  "value": "false",
+                  "description": "Filter online/in-person events.",
+                  "disabled": true
+                },
+                {
+                  "key": "is_fcbd",
+                  "value": "true",
+                  "description": "Filter Free Comic Book Day events.",
+                  "disabled": true
+                },
+                {
+                  "key": "country_code",
+                  "value": "US",
+                  "description": "Filter by country code.",
+                  "disabled": true
+                },
+                {
+                  "key": "region",
+                  "value": "California",
+                  "description": "Filter by region, matched exactly against the stored value. Use the values from /events/regions.",
+                  "disabled": true
+                },
+                {
+                  "key": "weekend",
+                  "value": "true",
+                  "description": "Only events running this Friday to Sunday.",
+                  "disabled": true
+                },
+                {
+                  "key": "month",
+                  "value": "2026-07",
+                  "description": "Only events starting in this month, as YYYY-MM.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "date_desc",
+                  "description": "One of date_asc, date_desc, name_asc, name_desc. Defaults to date_desc with `past`, date_asc otherwise; a `q` search without `sort` keeps relevance order.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/events",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns comic conventions and store events, paginated. Filter by type, time, place and format, and order with `sort`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get an event.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events/:event_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/events/:event_id",
+              "variable": [
+                {
+                  "id": "event_id",
+                  "key": "event_id",
+                  "value": "42",
+                  "description": "The event ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns full event details including links, map data, guests, exclusives and attendees."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Key Issue Reasons",
+      "description": "\nEndpoints for browsing key issue reasons (e.g., \"1st Appearance\", \"Death\", \"Origin\").\nThese are reusable labels that can be attached to issues to indicate significance.",
+      "item": [
+        {
+          "name": "List key issue reasons.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/key-issue-reasons",
+              "query": [
+                {
+                  "key": "category",
+                  "value": "appearance",
+                  "description": "Filter by category (appearance, story, creator, market, media).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "1st appearance",
+                  "description": "Match reasons whose name contains this.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "12",
+                  "description": "Cap the number returned (1-100). Applied only when q is present.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/key-issue-reasons",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns active key issue reasons, optionally filtered by category or name. Reasons are written\nper issue rather than drawn from a fixed vocabulary, so there are far more of them than the\ncategory list suggests — pass `q` and `limit` for a picker rather than fetching the lot."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comic Shops",
+      "description": "\nEndpoints for finding and browsing comic book shops.",
+      "item": [
+        {
+          "name": "List comic shops.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/shops",
+              "query": [
+                {
+                  "key": "country",
+                  "value": "US",
+                  "description": "Filter by country. Accepts an ISO alpha-2 code or canonical country name.",
+                  "disabled": true
+                },
+                {
+                  "key": "state",
+                  "value": "NY",
+                  "description": "Filter by state or province.",
+                  "disabled": true
+                },
+                {
+                  "key": "city",
+                  "value": "New York",
+                  "description": "Filter by city. Accepts the city name or its URL slug, case-insensitive.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "manhattan",
+                  "description": "Search by shop name, city, street address, postal code or state, tolerating small typos. Results are ordered by relevance when set.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/shops",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated shops with optional location-based and text filtering."
+          },
+          "response": []
+        },
+        {
+          "name": "Get a comic shop.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/shops/:shop_id",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/shops/:shop_id",
+              "variable": [
+                {
+                  "id": "shop_id",
+                  "key": "shop_id",
+                  "value": "1",
+                  "description": "The shop ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns full shop details including services offered.\n\n`operating_hours` is keyed Monday-first by lowercase day name. Each value is\neither `closed` or one or more 24-hour `HH:MM-HH:MM` ranges joined by commas\n(a split shift reads `09:00-13:00,15:00-19:00`). A day missing from the map\nhas unknown hours — that is not the same as the shop being closed that day.\n\n`special_hours` lists dated exceptions to the weekly hours, ordered by start\ndate: holiday closures, stocktake days, late openings for a release. Each entry\nhas `from` and `to` (inclusive `YYYY-MM-DD` dates, equal for a single day),\n`hours` in the same grammar as `operating_hours`, and an optional `note`. On the\ndates it covers, an entry replaces the weekly hours. Entries that have already\nended are left out, so an empty list means no exceptions are coming up."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Podcasts",
+      "description": "\nEndpoints for browsing comic book podcasts and episodes.",
+      "item": [
+        {
+          "name": "List all podcasts with optional search",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/podcasts",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "comic",
+                  "description": "Search by podcast name.",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "youtube",
+                  "description": "Filter by type (podcast or youtube).",
+                  "disabled": true
+                },
+                {
+                  "key": "language",
+                  "value": "en",
+                  "description": "Filter by language code (e.g., en, ja, fr).",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "[\"Reviews\"]",
+                  "description": "Filter by category name; a podcast matching any of them is returned.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "latest_episodes",
+                  "description": "Order: name (default), latest_episodes, newest, popular (most followers) or updated (recently synced).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Number of results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/podcasts",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a paginated list of comic book podcasts and YouTube channels, plus\nthe languages and categories present in the catalog. Filter with `q`, `type`,\n`language`, or `category`, and order with `sort`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get a specific podcast.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/podcasts/:podcast_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/podcasts/:podcast_id",
+              "variable": [
+                {
+                  "id": "podcast_id",
+                  "key": "podcast_id",
+                  "value": "56",
+                  "description": "The ID of the podcast."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns full detail for one podcast, including its feed, platform links, and categories."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lists",
+      "description": "\nUser-generated and curated lists of comic content.\n\nLists allow users to organize and share collections of issues, series, characters, creators, teams, or story arcs.\nUsers can save and like lists, and lists can be ranked or unranked.\n\n**Entity Types:** issues, series, characters, creators, story_arcs, teams\n\n**List Types:**\n- `custom` - User-created lists\n- `system` - Platform-curated lists (no owner)\n- `wishlist` - User's default wishlist (cannot be deleted)",
+      "item": [
+        {
+          "name": "Browse lists.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "spider-man",
+                  "description": "Search by list title or description, tolerating small typos in the title.",
+                  "disabled": true
+                },
+                {
+                  "key": "entity_type",
+                  "value": "issues",
+                  "description": "Filter by entity type (issues, series, characters, creators, story_arcs, teams). Matches lists declared as that type plus unrestricted lists holding at least one item of it.",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "curated",
+                  "description": "Filter by who made it — `curated` for staff lists, `community` for everyone else. Omit for both.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "popular",
+                  "description": "Sort order (featured, newest, popular, most_saved). Default: featured.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lists",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns paginated public lists with filtering and sorting options.\nOnly shows lists with at least one item."
+          },
+          "response": []
+        },
+        {
+          "name": "Create list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists",
+              "variable": []
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Best Batman Runs\",\n    \"description\": \"My favorite Batman story arcs ranked by quality.\",\n    \"entity_type\": \"issues\",\n    \"is_ranked\": true,\n    \"is_private\": false,\n    \"rules\": {\n        \"version\": 2,\n        \"match\": {\n            \"all\": [\n                {\n                    \"field\": \"launch_date\",\n                    \"op\": \"within_last\",\n                    \"value\": {\n                        \"count\": 3,\n                        \"unit\": \"months\"\n                    }\n                }\n            ]\n        },\n        \"sort\": {\n            \"field\": \"launch_date\",\n            \"direction\": \"desc\"\n        },\n        \"limit\": 500\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Creates a new user list. A list filled by hand holds items of any type, so `entity_type` is ignored without a smart-list rule."
+          },
+          "response": []
+        },
+        {
+          "name": "Browse system lists.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/system",
+              "query": [
+                {
+                  "key": "entity_type",
+                  "value": "issues",
+                  "description": "Filter by entity type (issues, series, characters, creators, story_arcs, teams).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "popular",
+                  "description": "Sort order (newest, popular).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lists/system",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns platform-curated lists (no user owner). These are editorial picks and featured content."
+          },
+          "response": []
+        },
+        {
+          "name": "Get user's lists.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/users/:user_id/lists",
+              "query": [
+                {
+                  "key": "entity_type",
+                  "value": "issues",
+                  "description": "Filter by entity type (issues, series, etc.).",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "newest",
+                  "description": "Sort order (newest, popular, most_saved).",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/users/:user_id/lists",
+              "variable": [
+                {
+                  "id": "user_id",
+                  "key": "user_id",
+                  "value": "123",
+                  "description": "The user ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a user's public lists. Your own lists also include private and draft ones when the\ntoken has `read:user`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id",
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "release_date",
+                  "description": "How to order the items. Omit for the list's own order — by\nposition when it is ranked, newest added first when it is not. `recent` and `oldest`\nwork on any list; the remaining values are the sortable fields for the list's entity\ntype (`name`, `release_date`, `start_year`, `issues_count`, `launch_date`, `arc_order`),\nand are ignored on a mixed list, whose items span several tables.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns a single list with all its items. Private lists are only visible to owners."
+          },
+          "response": []
+        },
+        {
+          "name": "Update list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Title\",\n    \"description\": \"Updated description\",\n    \"is_ranked\": false,\n    \"is_private\": true,\n    \"status\": \"published\",\n    \"rules\": {\n        \"version\": 2,\n        \"match\": {\n            \"all\": [\n                {\n                    \"field\": \"launch_date\",\n                    \"op\": \"within_last\",\n                    \"value\": {\n                        \"count\": 3,\n                        \"unit\": \"months\"\n                    }\n                }\n            ]\n        },\n        \"sort\": {\n            \"field\": \"launch_date\",\n            \"direction\": \"desc\"\n        },\n        \"limit\": 500\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates a list's metadata. Wishlists can only update privacy settings."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Permanently deletes a list and all its items. Wishlists cannot be deleted."
+          },
+          "response": []
+        },
+        {
+          "name": "Save list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/save",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/save",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Saves a list to the user's saved lists for quick access. Cannot save your own lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Unsave list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/save",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/save",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes a list from the user's saved lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Like list, or react to it.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/like",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/like",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reaction\": \"clap\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "With no body this likes the list. Send `reaction` to leave that reaction instead, or to change the one already held; `DELETE` takes it back whichever it is. A member holds one reaction per list and every reaction counts toward `likes_count`. Cannot like your own lists."
+          },
+          "response": []
+        },
+        {
+          "name": "Unlike list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/like",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/like",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes the user's like or reaction from a list."
+          },
+          "response": []
+        },
+        {
+          "name": "Open a list to any type.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/convert-to-mixed",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/convert-to-mixed",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "One-way: broadens a single-type list so it can hold items of any type. Existing items keep their own type. It cannot be narrowed back, and a wishlist already holds any type."
+          },
+          "response": []
+        },
+        {
+          "name": "Stop a list updating itself.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/stop-rule",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/stop-rule",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "One-way: drops a smart list's rule and keeps every item the last refresh left, handing the contents back for editing by hand. A rule is only ever attached when a list is created, so it cannot be put back."
+          },
+          "response": []
+        },
+        {
+          "name": "Merge a list into this one.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/merge",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/merge",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"source_list_id\": 207,\n    \"delete_source\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Pulls every item from the source list into this (destination) list, skipping items already present (by entity + variant) and appending the rest. Both lists must be owned by the authenticated user. Merging items of a different type opens this list to any type."
+          },
+          "response": []
+        },
+        {
+          "name": "Add item to list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/items",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/items",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"entity_id\": 42,\n    \"entity_type\": \"issues\",\n    \"variant_id\": 7,\n    \"position\": 1,\n    \"note\": \"The issue that started it all.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Adds an entity to a list. Free users: 100 items/list, PRO users: 500 items/list."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove item from list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/items/:item_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/items/:item_id",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                },
+                {
+                  "id": "item_id",
+                  "key": "item_id",
+                  "value": "501",
+                  "description": "The list item ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes an item from a list. Other items' positions are kept."
+          },
+          "response": []
+        },
+        {
+          "name": "Reorder items.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lists/:list_id/items/reorder",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lists/:list_id/items/reorder",
+              "variable": [
+                {
+                  "id": "list_id",
+                  "key": "list_id",
+                  "value": "101",
+                  "description": "The list ID."
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"item_ids\": [\n        3,\n        1,\n        2\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Reorders items in a ranked list by providing the new order of item IDs."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Barcode Lookup",
+      "description": "\nEndpoints for looking up comics by barcode (UPC or ISBN) or by a distributor's\norder code (Lunar or Universal). Used by the mobile app's barcode scanning feature\nand exposed to User API tokens via the `lookup:barcode` ability.\n\nOn the Mobile API the GET lookups sit on the App Clip mode of the first-party\ndoor: a signed-in session gets the full payload, and the App Clip, which has no\naccount, gets the preview payload with its attested clip token (#3044). On the\npublic User API they require the `lookup:barcode` token ability, and carry no\nmarket quote.",
+      "item": [
+        {
+          "name": "Lookup by UPC.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lookup/upc/:upc",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lookup/upc/:upc",
+              "variable": [
+                {
+                  "id": "upc",
+                  "key": "upc",
+                  "value": "75960608936700111",
+                  "description": "The UPC barcode."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Find an issue by its UPC barcode (10 to 18 digits; anything else in the code is dropped). A variant's printed code finds its issue, and a bare 12-digit series code\nwidens to every issue built on it. One issue returns 200 with its covers; a code several issues hold returns 409 with up to 25 candidates."
+          },
+          "response": []
+        },
+        {
+          "name": "Lookup by ISBN.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lookup/isbn/:isbn",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lookup/isbn/:isbn",
+              "variable": [
+                {
+                  "id": "isbn",
+                  "key": "isbn",
+                  "value": "978-1302913847",
+                  "description": "The ISBN (10 or 13 digits)."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Find an issue by its ISBN (10 or 13 digits, with or without dashes).\nCommonly used for trade paperbacks and hardcovers.\nReturns full issue details including series information."
+          },
+          "response": []
+        },
+        {
+          "name": "Lookup by distributor code.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lookup/code/:code",
+              "query": [
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/lookup/code/:code",
+              "variable": [
+                {
+                  "id": "code",
+                  "key": "code",
+                  "value": "1125DC0151",
+                  "description": "A Lunar or Universal code."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Find an issue by its distributor order code: a Lunar code (like `0126IM0451`) or a\nUniversal code (like `DC10251016`), in any case. A variant's own code finds its issue,\nand `suggested_variant_id` then names that variant. The payload matches the UPC lookup:\none issue returns 200, a code held by several issues returns 409 with the candidates."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cover Lookup",
+      "description": "\nIdentify a comic from a photo of its cover. The photo is matched by image against every cover\nin the catalog (issues and variants), and the answer is catalog ids. No cover image is stored,\nand none comes back beyond the cover URLs the issue resource already carries.",
+      "item": [
+        {
+          "name": "Look up an issue by cover photo.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/lookup/cover",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/lookup/cover",
+              "variable": []
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "A photo of the comic cover: JPEG, PNG, GIF, BMP or WebP, up to 5MB. Must be an image. Must not be greater than 5120 kilobytes."
+                }
+              ]
+            },
+            "description": "Upload a photo of a comic cover (bare, bagged or slabbed) as `image`. `clear_match` true means\nthe image match is sure of the issue: `issue_id` is it, and `variant_id` is the cover when the\nmatch also settled which of the issue's covers it is (null is the issue's own cover, or a cover\nit could not tell apart from a same-art sibling such as a newsstand edition). `clear_match`\nfalse means the image was not sure: `issue_id` is null and `candidates` lists up to five\nissues it could be, best first, each at its best-scoring cover. Only the image is compared;\nno text is read off the cover, so a slab label's grade is not returned. Requires the\n`read:public` scope. Rate limited separately from catalog reads: 5/min and 100/day, or\n15/min and 500/day on PRO."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reading",
+      "description": "",
+      "item": [
+        {
+          "name": "View your reading goal.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/reading-goal",
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2026",
+                  "description": "UTC year; defaults to the current year.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/reading-goal",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Available to every authenticated member. Returns only the caller's goal.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets the goal without\n`notify_milestones`, `notify_lapses` and `email_updates`."
+          },
+          "response": []
+        },
+        {
+          "name": "View yearly reading statistics.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/reading-stats/year",
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2026",
+                  "description": "UTC year; defaults to the current year.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/reading-stats/year",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Pro feature. Includes goal progress, daily and monthly counts, pace,\nstreaks, rankings and completed series for the authenticated member.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets `progress` without\n`notify_milestones`, `notify_lapses` and `email_updates`."
+          },
+          "response": []
+        },
+        {
+          "name": "View your monthly reading calendar.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/reading-stats/calendar",
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2026",
+                  "description": "UTC year; defaults to the current year.",
+                  "disabled": true
+                },
+                {
+                  "key": "month",
+                  "value": "9",
+                  "description": "Month from 1 to 12; defaults to the current UTC month.",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number, starting at 1.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/reading-stats/calendar",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Pro feature. Returns up to 60 reads per page, newest first.\n\nNeeds `read:user` or `read:showcase`; both get the same response."
+          },
+          "response": []
+        },
+        {
+          "name": "View your unfinished comics from the VerseDB reader.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/reading/in-progress",
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "12",
+                  "description": "Results per page (1-50); defaults to 12.",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number, starting at 1.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/reading/in-progress",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns display fields only; page URLs, resume positions and private account data are excluded.\nFinished and unavailable books are omitted, with content preferences applied. Newest first.\n\nNeeds `read:user` or `read:showcase`; both get the same response."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "description": "\nEndpoints for managing the authenticated user's pull list, follows, and reading progress.\n\nAll endpoints in this group require authentication with a Bearer API token.",
+      "item": [
+        {
+          "name": "Get the authenticated user.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/user",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the profile of the user the token belongs to.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets only `id`, `name`,\n`username`, `bio`, the avatar and banner fields, `is_pro`, the level and XP fields,\n`created_at` and `updated_at`: no email, location, birth date, preferences, or\nnotification and account settings."
+          },
+          "response": []
+        },
+        {
+          "name": "List read status.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/read-status",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "unreviewed",
+                  "value": "true",
+                  "description": "When true, only returns reads for issues the user has not yet reviewed.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "saga 12",
+                  "description": "Search your reads by series name or issue number.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "read_at_asc",
+                  "description": "One of `read_at_desc`, `read_at_asc`, `title_asc`, `title_desc`. Default: newest marked first.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/read-status",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns all issues the user has marked as read with timestamps.\n\nNeeds `read:user` or `read:showcase`; both get the same response."
+          },
+          "response": []
+        },
+        {
+          "name": "List wishlist.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/wishlist",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/wishlist",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the authenticated user's wishlist issues, most recently added first.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets each item without `note`."
+          },
+          "response": []
+        },
+        {
+          "name": "List collection.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/collections",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "spider",
+                  "description": "Filter by issue name, issue number, or series name.",
+                  "disabled": true
+                },
+                {
+                  "key": "format",
+                  "value": "single",
+                  "description": "Filter by stored format.",
+                  "disabled": true
+                },
+                {
+                  "key": "graded",
+                  "value": "true",
+                  "description": "Filter to graded (true) or raw (false) copies.",
+                  "disabled": true
+                },
+                {
+                  "key": "is_signed",
+                  "value": "true",
+                  "description": "Filter to signed (true) or unsigned (false) copies. PRO; ignored for other members.",
+                  "disabled": true
+                },
+                {
+                  "key": "condition",
+                  "value": "NM",
+                  "description": "Filter by condition grade code.",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "sold",
+                  "description": "Which copies to return: owned, for_sale, sold, or all. Sold copies are excluded by default.",
+                  "disabled": true
+                },
+                {
+                  "key": "for_sale",
+                  "value": "true",
+                  "description": "Filter to copies marked for sale.",
+                  "disabled": true
+                },
+                {
+                  "key": "for_trade",
+                  "value": "true",
+                  "description": "Filter to copies marked for trade.",
+                  "disabled": true
+                },
+                {
+                  "key": "read_status",
+                  "value": "unread",
+                  "description": "Filter by read state. One of: read, unread.",
+                  "disabled": true
+                },
+                {
+                  "key": "publisher_id",
+                  "value": "1",
+                  "description": "Filter to issues from a publisher.",
+                  "disabled": true
+                },
+                {
+                  "key": "series_id",
+                  "value": "123",
+                  "description": "Filter to copies of issues in a series.",
+                  "disabled": true
+                },
+                {
+                  "key": "grade_min",
+                  "value": "9",
+                  "description": "Filter to copies with a numeric grade at or above this value. PRO; ignored for other members.",
+                  "disabled": true
+                },
+                {
+                  "key": "grade_max",
+                  "value": "9.8",
+                  "description": "Filter to copies with a numeric grade at or below this value. PRO; ignored for other members.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "title",
+                  "description": "Sort field. One of: date_added, title, release_date, estimated_value, price_paid.",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_order",
+                  "value": "asc",
+                  "description": "Sort direction. One of: asc, desc.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/collections",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the issues in the user's collection, newest added first, each with its issue, series and publisher.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets each copy without\n`price_paid`, `estimated_value`, `value_last_updated`, `price_sold`, `sold_at`,\n`purchased_at`, `purchase_source`, `purchase_store`, `acquisition_method`,\n`comic_shop_id`, `comic_shop`, `notes`, `grader_notes`, `storage_location`,\n`custom_label`, `bagged_at`, `personal_rating`, `tags` or `loan`, leaves out copies\nmarked not public, and the `estimated_value` and `price_paid` sorts fall back to `date_added`."
+          },
+          "response": []
+        },
+        {
+          "name": "Check issue in collection.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/collection/check",
+              "query": [
+                {
+                  "key": "variant_id",
+                  "value": "789",
+                  "description": "Specific variant ID to check (optional).",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/collection/check",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Checks if an issue (optionally a specific variant) is in the user's collection: the copies still held (sold ones\nleft out), oldest first, and the first of them in full.\n\nNeeds `read:user`."
+          },
+          "response": []
+        },
+        {
+          "name": "List pull list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/pull-list",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/pull-list",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns all series on the user's pull list (series they're tracking for new releases), most recently added first.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets each entry without\n`personal_notes`, `notify_on_release`, `notification_settings`, `auto_pull`,\n`last_pulled_at`, `preferred_cover_type`, `pull_priority` or the pull source fields."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as read.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/read-status",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/read-status",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"variant_id\": 789\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Marks an issue (optionally a specific variant) as read with the current timestamp."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as unread.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/read-status",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/read-status",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"variant_id\": 789\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Removes the read status for an issue (optionally a specific variant)."
+          },
+          "response": []
+        },
+        {
+          "name": "Edit reading date.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/read-status",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/read-status",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"read_at\": \"2026-03-01\",\n    \"variant_id\": 789\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert)."
+          },
+          "response": []
+        },
+        {
+          "name": "Add to wishlist.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/wishlist",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/wishlist",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"variant_id\": 789\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Adds the issue to the authenticated user's wishlist. Idempotent: calling\nwith an issue already on the wishlist returns 200 without creating a duplicate."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove from wishlist.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/wishlist",
+              "query": [
+                {
+                  "key": "variant_id",
+                  "value": "7",
+                  "description": "Optional cover variant to remove. Omit to remove the \"any cover\" entry — variant-pinned entries for the same issue are left alone.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/wishlist",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes the issue from the authenticated user's wishlist. Idempotent:\nreturns 204 whether or not the issue was on the wishlist."
+          },
+          "response": []
+        },
+        {
+          "name": "Add to pull list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/pull-list/items",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/pull-list/items",
+              "variable": []
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"series_id\": 456\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Adds a series to the user's pull list to track new releases. Adding a series already on it changes nothing."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove from pull list.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/pull-list/items/:item_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/pull-list/items/:item_id",
+              "variable": [
+                {
+                  "id": "item_id",
+                  "key": "item_id",
+                  "value": "456",
+                  "description": "The series ID of the pull list entry."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes a series from the authenticated user's pull list. Idempotent: returns 204 whether or not the series was on it."
+          },
+          "response": []
+        },
+        {
+          "name": "Add issue to collection.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/collection",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/collection",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"variant_id\": 42,\n    \"condition\": \"NM\",\n    \"notes\": \"First print, great condition\",\n    \"price_paid\": 3.99,\n    \"format\": \"standard\",\n    \"purchase_source\": \"comic_shop\",\n    \"purchase_store\": \"Third Eye Comics\",\n    \"custom_label\": \"Longbox A / row 3\",\n    \"bagged_at\": \"2024-07-01\",\n    \"personal_rating\": 4.5,\n    \"tags\": [\n        \"key\"\n    ],\n    \"comic_shop_id\": 412,\n    \"acquisition_method\": \"purchase\",\n    \"purchased_at\": \"2024-06-15\",\n    \"storage_location\": \"Long box #3\",\n    \"is_signed\": false,\n    \"signed_by\": \"Stan Lee\",\n    \"is_variant\": false,\n    \"variant_description\": \"Skottie Young baby variant\",\n    \"variant_type\": \"cover_variant\",\n    \"graded\": false,\n    \"grade_score\": \"9.8\",\n    \"grading_company\": \"CGC\",\n    \"grading_number\": \"1234567890\",\n    \"label_type\": \"universal\",\n    \"page_quality\": \"white\",\n    \"grader_notes\": \"Marvel Value Stamp #16 intact\",\n    \"print_number\": \"1st\",\n    \"signature_witness\": \"witnessed_in_person\",\n    \"estimated_value\": 25,\n    \"for_sale\": false,\n    \"status\": \"sold\",\n    \"sold_at\": \"2026-08-14\",\n    \"price_sold\": 40,\n    \"for_trade\": false,\n    \"is_public\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Adds a copy of the issue to the user's collection; every field is optional. When the issue was on the user's wishlist it comes off when the user chose that, else `was_on_wishlist` is true so the app can offer it. `follow_up` says whether to offer marking it read or reviewing it."
+          },
+          "response": []
+        },
+        {
+          "name": "Remove issue from collection.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/collection",
+              "query": [
+                {
+                  "key": "variant_id",
+                  "value": "789",
+                  "description": "Specific variant ID to remove (optional).",
+                  "disabled": true
+                },
+                {
+                  "key": "collection_item_id",
+                  "value": "1001",
+                  "description": "Specific collection item ID to remove (optional).",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/collection",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Removes one of the user's copies of the issue: the copy `collection_item_id` names, else the oldest copy (of `variant_id`'s cover when one is sent). Each may come in the query or the body."
+          },
+          "response": []
+        },
+        {
+          "name": "Update collection item.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/issues/:issue_id/collection",
+              "query": [
+                {
+                  "key": "variant_id",
+                  "value": "789",
+                  "description": "Specific variant ID to update (when user has multiple entries).",
+                  "disabled": true
+                },
+                {
+                  "key": "collection_item_id",
+                  "value": "1001",
+                  "description": "Specific collection item ID to update.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/issues/:issue_id/collection",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"variant_id\": 42,\n    \"condition\": \"NM\",\n    \"notes\": \"First print, great condition\",\n    \"price_paid\": 3.99,\n    \"format\": \"standard\",\n    \"purchase_source\": \"comic_shop\",\n    \"purchase_store\": \"Third Eye Comics\",\n    \"custom_label\": \"Longbox A / row 3\",\n    \"bagged_at\": \"2024-07-01\",\n    \"personal_rating\": 4.5,\n    \"tags\": [\n        \"key\"\n    ],\n    \"comic_shop_id\": 412,\n    \"acquisition_method\": \"purchase\",\n    \"purchased_at\": \"2024-06-15\",\n    \"storage_location\": \"Long box #3\",\n    \"is_signed\": false,\n    \"signed_by\": \"Stan Lee\",\n    \"is_variant\": false,\n    \"variant_description\": \"Skottie Young baby variant\",\n    \"variant_type\": \"cover_variant\",\n    \"graded\": false,\n    \"grade_score\": \"9.8\",\n    \"grading_company\": \"CGC\",\n    \"grading_number\": \"1234567890\",\n    \"label_type\": \"universal\",\n    \"page_quality\": \"white\",\n    \"grader_notes\": \"Marvel Value Stamp #16 intact\",\n    \"print_number\": \"1st\",\n    \"signature_witness\": \"witnessed_in_person\",\n    \"estimated_value\": 25,\n    \"for_sale\": false,\n    \"status\": \"sold\",\n    \"sold_at\": \"2026-08-14\",\n    \"price_sold\": 40,\n    \"for_trade\": false,\n    \"is_public\": true,\n    \"is_read\": true,\n    \"read_at\": \"2024-06-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Updates one of the user's copies of the issue: the copy `collection_item_id` names (query or body), else the oldest copy (of the query's `variant_id` cover when one is sent). Only the fields sent change; `tags` replaces the copy's tags. `is_read` and `read_at` set the issue's read status too."
+          },
+          "response": []
+        },
+        {
+          "name": "Lend a copy out.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/collections/:collection_item_id/loan",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/user/collections/:collection_item_id/loan",
+              "variable": [
+                {
+                  "id": "collection_item_id",
+                  "key": "collection_item_id",
+                  "value": "1001",
+                  "description": "The collection item ID."
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"loaned_to\": \"Dan from the shop\",\n    \"loaned_at\": \"2026-09-01\",\n    \"due_at\": \"2026-10-01\",\n    \"notes\": \"Lent at the Saturday meetup\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Records that one of the user's copies is out on loan. A copy already out is a 409 rather than a replacement: mark it returned, then lend it again."
+          },
+          "response": []
+        },
+        {
+          "name": "Mark the copy's open loan returned.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/collections/:collection_item_id/loan",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/user/collections/:collection_item_id/loan",
+              "variable": [
+                {
+                  "id": "collection_item_id",
+                  "key": "collection_item_id",
+                  "value": "1001",
+                  "description": "The collection item ID."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"returned_at\": \"2026-09-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Closes the copy's open loan. A copy with no open loan is a 404, so a repeat call does not silently succeed."
+          },
+          "response": []
+        },
+        {
+          "name": "List follows.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/follows",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "Character",
+                  "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "spider",
+                  "description": "Only follows whose followed entity matches this search (name; username for users).",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/follows",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns all entities the user is following (titles, characters, podcasts, etc.)."
+          },
+          "response": []
+        },
+        {
+          "name": "Check follow status.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/follow/:type/:id/check",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/follow/:type/:id/check",
+              "variable": [
+                {
+                  "id": "type",
+                  "key": "type",
+                  "value": "title",
+                  "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
+                },
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "45",
+                  "description": "The ID of the content."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Reports whether the authenticated user currently follows the given entity."
+          },
+          "response": []
+        },
+        {
+          "name": "Follow content.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/follow",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/follow",
+              "variable": []
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"title\",\n    \"id\": 45,\n    \"preferences\": {\n        \"email_notifications\": true,\n        \"push_notifications\": false\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Follows a title, character, podcast, creator, publisher, team, story arc, comic shop, event, event franchise, or user."
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow content.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/follow/:type/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/follow/:type/:id",
+              "variable": [
+                {
+                  "id": "type",
+                  "key": "type",
+                  "value": "title",
+                  "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
+                },
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "45",
+                  "description": "The ID of the followed content."
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Stops following the given entity for the authenticated user."
+          },
+          "response": []
+        },
+        {
+          "name": "Get activity feed.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/activity",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Number of results per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page of results to return.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/activity",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Aggregates recent activity from collections, reads, follows, and reviews."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Connect to VerseDB",
+      "description": "\nLets a third-party site get a read-only token for a member's account without the member\ncopying one by hand. It is an OAuth 2.0 authorization-code flow with PKCE (S256).\n\n1. Generate a random `code_verifier` (43-128 characters) and a `state`, and keep both on your\n   server. The `code_challenge` is the base64url-encoded SHA-256 of the verifier, without padding.\n2. Send the member to `https://versedb.com/connect` with `redirect_uri`, `state`,\n   `code_challenge`, `code_challenge_method=S256`, and optionally `client_name` (your app, such as\n   `WordPress`, 40 characters at most), `site_name` (100 at most) and `scope` (a space-separated\n   subset of `read:public read:showcase`; both by default). `redirect_uri` must be HTTPS, or\n   `http://localhost` while developing.\n3. The member signs in if needed and approves or denies. VerseDB redirects to `redirect_uri` with\n   `code` and `state`, or with `error=access_denied` and `state` when they deny. Check that\n   `state` matches.\n4. Within 5 minutes, exchange the code here from your server.\n\nThe token is named \"{client_name}: {your host}\", lasts 365 days, shows in the member's My Apps\npage and counts toward their limit of 10 active tokens. Connecting the same site again replaces\nits previous token. `read:showcase` reads the member's profile, collection, wishlist, pull list and\nreading progress for display, without email, birth date, location, prices, notes, storage or loans.",
+      "item": [
+        {
+          "name": "Exchange a Connect code for a token",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/connect/token",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/connect/token",
+              "variable": []
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"grant_type\": \"authorization_code\",\n    \"code\": \"9Qm2cT4xZ7bN1pL8vR3kW6yH0sD5fJ2aG4eU7iO1nB3vC6xZ\",\n    \"redirect_uri\": \"https://example.com/wp-admin/options-general.php?page=versedb\",\n    \"code_verifier\": \"dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Redeems the single-use code from the Connect redirect. A code works once: a second attempt,\na wrong `code_verifier` or a different `redirect_uri` fails and the code cannot be used again.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}
