@@ -8,7 +8,7 @@ To authenticate requests, include an **`Authorization`** header with the value *
 
 All authenticated endpoints are marked `requires authentication` in the endpoint reference.
 
-You can retrieve your token by visiting your dashboard and clicking **Generate API token**. The token should be prefixed with "Bearer ".
+Create a token at [versedb.com/my/apps/custom/create](https://versedb.com/my/apps/custom/create). The token should be prefixed with "Bearer ".
 
 ## Token Ownership & Responsibility
 
