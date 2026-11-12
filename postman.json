@@ -3827,6 +3827,117 @@
           "response": []
         },
         {
+          "name": "List follows.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/follows",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Items per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "Character",
+                  "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "spider",
+                  "description": "Only follows whose followed entity matches this search (name; username for users).",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/follows",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the entities the user follows (titles, characters, podcasts and the rest), newest first, without members a block\nstands between.\n\nNeeds `read:user`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get activity feed.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/user/activity",
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "description": "Number of results per page (max 100).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page of results to return.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/user/activity",
+              "variable": []
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Aggregates the user's activity from collections, reads, follows and issue reviews, one entry per row, newest first.\n\nNeeds `read:user`."
+          },
+          "response": []
+        },
+        {
+          "name": "Check follow status.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/follow/:type/:id/check",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/follow/:type/:id/check",
+              "variable": [
+                {
+                  "id": "type",
+                  "key": "type",
+                  "value": "title",
+                  "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
+                },
+                {
+                  "id": "id",
+                  "key": "id",
+                  "value": "45",
+                  "description": "The ID of the content."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Reports whether the authenticated user currently follows the given entity. An event in a franchise counts as followed when the franchise is."
+          },
+          "response": []
+        },
+        {
           "name": "List read status.",
           "request": {
             "url": {
@@ -4599,82 +4710,6 @@
           "response": []
         },
         {
-          "name": "List follows.",
-          "request": {
-            "url": {
-              "host": "{{baseUrl}}",
-              "path": "api/v1/user/follows",
-              "query": [
-                {
-                  "key": "per_page",
-                  "value": "20",
-                  "description": "Items per page (max 100).",
-                  "disabled": true
-                },
-                {
-                  "key": "type",
-                  "value": "Character",
-                  "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
-                  "disabled": true
-                },
-                {
-                  "key": "q",
-                  "value": "spider",
-                  "description": "Only follows whose followed entity matches this search (name; username for users).",
-                  "disabled": true
-                }
-              ],
-              "raw": "{{baseUrl}}/api/v1/user/follows",
-              "variable": []
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": null,
-            "description": "Returns all entities the user is following (titles, characters, podcasts, etc.)."
-          },
-          "response": []
-        },
-        {
-          "name": "Check follow status.",
-          "request": {
-            "url": {
-              "host": "{{baseUrl}}",
-              "path": "api/v1/follow/:type/:id/check",
-              "query": [],
-              "raw": "{{baseUrl}}/api/v1/follow/:type/:id/check",
-              "variable": [
-                {
-                  "id": "type",
-                  "key": "type",
-                  "value": "title",
-                  "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
-                },
-                {
-                  "id": "id",
-                  "key": "id",
-                  "value": "45",
-                  "description": "The ID of the content."
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": null,
-            "description": "Reports whether the authenticated user currently follows the given entity."
-          },
-          "response": []
-        },
-        {
           "name": "Follow content.",
           "request": {
             "url": {
@@ -4704,7 +4739,7 @@
                 }
               }
             },
-            "description": "Follows a title, character, podcast, creator, publisher, team, story arc, comic shop, event, event franchise, or user."
+            "description": "Follows a title, character, podcast, creator, publisher, team, story arc, comic shop, event, event franchise, or user. Following an event that belongs to a franchise follows the franchise too."
           },
           "response": []
         },
@@ -4739,42 +4774,7 @@
               }
             ],
             "body": null,
-            "description": "Stops following the given entity for the authenticated user."
-          },
-          "response": []
-        },
-        {
-          "name": "Get activity feed.",
-          "request": {
-            "url": {
-              "host": "{{baseUrl}}",
-              "path": "api/v1/user/activity",
-              "query": [
-                {
-                  "key": "per_page",
-                  "value": "20",
-                  "description": "Number of results per page (max 100).",
-                  "disabled": true
-                },
-                {
-                  "key": "page",
-                  "value": "1",
-                  "description": "Page of results to return.",
-                  "disabled": true
-                }
-              ],
-              "raw": "{{baseUrl}}/api/v1/user/activity",
-              "variable": []
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": null,
-            "description": "Aggregates recent activity from collections, reads, follows, and reviews."
+            "description": "Stops following the given entity for the authenticated user. Unfollowing an event in a franchise, or the franchise, clears both."
           },
           "response": []
         }

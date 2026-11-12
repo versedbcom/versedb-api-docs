@@ -1042,6 +1042,1089 @@
         }
       }
     },
+    "/api/v1/user/follows": {
+      "get": {
+        "operationId": "listFollows",
+        "summary": "List follows.",
+        "description": "Returns the entities the user follows (titles, characters, podcasts and the rest), newest first, without members a block\nstands between.\n\nNeeds `read:user`.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                20
+              ],
+              "description": "Items per page (max 100)."
+            },
+            "required": false,
+            "description": "Items per page (max 100).",
+            "name": "per_page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "Character"
+              ],
+              "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User)."
+            },
+            "required": false,
+            "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "spider"
+              ],
+              "description": "Only follows whose followed entity matches this search (name; username for users)."
+            },
+            "required": false,
+            "description": "Only follows whose followed entity matches this search (name; username for users).",
+            "name": "q",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    299
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "examples": [
+                              789
+                            ]
+                          },
+                          "user_id": {
+                            "type": "integer",
+                            "examples": [
+                              12
+                            ]
+                          },
+                          "followable_type": {
+                            "type": "string",
+                            "description": "The morph alias of the followed entity.",
+                            "examples": [
+                              "Title"
+                            ]
+                          },
+                          "followable_id": {
+                            "type": "integer",
+                            "examples": [
+                              123
+                            ]
+                          },
+                          "preferences": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "array",
+                                "items": {}
+                              },
+                              {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "The notification preferences given with the follow.",
+                            "examples": [
+                              {
+                                "email_notifications": true
+                              }
+                            ]
+                          },
+                          "created_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "examples": [
+                              "2024-01-15T10:30:00.000000Z"
+                            ]
+                          },
+                          "updated_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "examples": [
+                              "2024-01-15T10:30:00.000000Z"
+                            ]
+                          },
+                          "followable": {
+                            "type": [
+                              "object",
+                              "null"
+                            ],
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "examples": [
+                                  123
+                                ]
+                              },
+                              "name": {
+                                "type": "string",
+                                "examples": [
+                                  "Spider-Man"
+                                ]
+                              },
+                              "slug": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "examples": [
+                                  "spider-man"
+                                ]
+                              },
+                              "username": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "examples": [
+                                  "reader42"
+                                ],
+                                "description": "A member's username; null for anything else."
+                              },
+                              "image_url": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "examples": [
+                                  "https://..."
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name",
+                              "slug",
+                              "username",
+                              "image_url"
+                            ],
+                            "description": "The followed entity, or null when it is gone."
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "user_id",
+                          "followable_type",
+                          "followable_id",
+                          "preferences",
+                          "created_at",
+                          "updated_at",
+                          "followable"
+                        ]
+                      }
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "first": {
+                          "type": "string"
+                        },
+                        "last": {
+                          "type": "string"
+                        },
+                        "prev": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "next": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "first",
+                        "last",
+                        "prev",
+                        "next"
+                      ]
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer",
+                          "examples": [
+                            1
+                          ]
+                        },
+                        "from": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "examples": [
+                            1
+                          ]
+                        },
+                        "last_page": {
+                          "type": "integer",
+                          "examples": [
+                            25
+                          ]
+                        },
+                        "links": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ]
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "page": {
+                                "type": [
+                                  "integer",
+                                  "null"
+                                ]
+                              },
+                              "active": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "label",
+                              "active"
+                            ]
+                          }
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "examples": [
+                            20
+                          ]
+                        },
+                        "to": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "examples": [
+                            20
+                          ]
+                        },
+                        "total": {
+                          "type": "integer",
+                          "examples": [
+                            500
+                          ]
+                        }
+                      },
+                      "required": [
+                        "current_page",
+                        "from",
+                        "last_page",
+                        "links",
+                        "path",
+                        "per_page",
+                        "to",
+                        "total"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "links",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token lacks the read:user ability.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Insufficient token scope."
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "A type that is not followable, or a search past 100 characters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "The selected type is not followable."
+                      ]
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "examples": [
+                        {
+                          "type": [
+                            "The selected type is not followable."
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "errors"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    3600
+                  ]
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    0
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/activity": {
+      "get": {
+        "operationId": "getActivityFeed",
+        "summary": "Get activity feed.",
+        "description": "Aggregates the user's activity from collections, reads, follows and issue reviews, one entry per row, newest first.\n\nNeeds `read:user`.",
+        "tags": [
+          "User"
+        ],
+        "deprecated": true,
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                20
+              ],
+              "description": "Number of results per page (max 100)."
+            },
+            "required": false,
+            "description": "Number of results per page (max 100).",
+            "name": "per_page",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                1
+              ],
+              "description": "Page of results to return."
+            },
+            "required": false,
+            "description": "Page of results to return.",
+            "name": "page",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    299
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "The source and its row id.",
+                            "examples": [
+                              "collection_9921"
+                            ]
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "collection",
+                              "read",
+                              "follow",
+                              "review"
+                            ],
+                            "examples": [
+                              "collection"
+                            ]
+                          },
+                          "action": {
+                            "type": "string",
+                            "enum": [
+                              "added_to_collection",
+                              "marked_as_read",
+                              "started_following",
+                              "wrote_review"
+                            ],
+                            "examples": [
+                              "added_to_collection"
+                            ]
+                          },
+                          "created_at": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "examples": [
+                              "2026-06-20T14:32:00+00:00"
+                            ]
+                          },
+                          "data": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "issue_id": {
+                                    "type": "integer",
+                                    "examples": [
+                                      5432
+                                    ]
+                                  },
+                                  "issue_name": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "Amazing Spider-Man #1"
+                                    ],
+                                    "description": "The issue as its series names it, or null when the issue is gone."
+                                  },
+                                  "series_name": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "Amazing Spider-Man"
+                                    ]
+                                  },
+                                  "series_start_year": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      2022
+                                    ]
+                                  },
+                                  "cover_url": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "https://r2.versedb.com/uploads/issues/asm-5432/asm-5432-cover_md.webp"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "issue_id",
+                                  "issue_name",
+                                  "series_name",
+                                  "series_start_year",
+                                  "cover_url"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "review_id": {
+                                    "type": "integer",
+                                    "examples": [
+                                      312
+                                    ]
+                                  },
+                                  "issue_id": {
+                                    "type": "integer",
+                                    "examples": [
+                                      5432
+                                    ]
+                                  },
+                                  "issue_name": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "Amazing Spider-Man #1"
+                                    ],
+                                    "description": "The issue as its series names it, or null when the issue is gone."
+                                  },
+                                  "series_name": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "Amazing Spider-Man"
+                                    ]
+                                  },
+                                  "series_start_year": {
+                                    "type": [
+                                      "integer",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      2022
+                                    ]
+                                  },
+                                  "rating": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "4.5"
+                                    ],
+                                    "description": "The rating to one decimal place, as text."
+                                  },
+                                  "content_preview": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "A strong anniversary issue that pays off years of buildup..."
+                                    ],
+                                    "description": "The first 100 characters of the review."
+                                  },
+                                  "cover_url": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "https://r2.versedb.com/uploads/issues/asm-5432/asm-5432-cover_md.webp"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "review_id",
+                                  "issue_id",
+                                  "issue_name",
+                                  "series_name",
+                                  "series_start_year",
+                                  "rating",
+                                  "content_preview",
+                                  "cover_url"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "followable_type": {
+                                    "type": "string",
+                                    "description": "The followed type, lower-cased (title, character, comicevent, user, ...).",
+                                    "examples": [
+                                      "title"
+                                    ]
+                                  },
+                                  "followable_id": {
+                                    "type": "integer",
+                                    "examples": [
+                                      123
+                                    ]
+                                  },
+                                  "name": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "Spider-Man"
+                                    ],
+                                    "description": "The followed entity, or null when it is gone."
+                                  },
+                                  "image_url": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "examples": [
+                                      "https://..."
+                                    ],
+                                    "description": "A followed title's cover; null for other types."
+                                  }
+                                },
+                                "required": [
+                                  "followable_type",
+                                  "followable_id",
+                                  "name",
+                                  "image_url"
+                                ]
+                              }
+                            ],
+                            "description": "The issue, review or followed entity the entry is about."
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "action",
+                          "created_at",
+                          "data"
+                        ]
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "current_page": {
+                          "type": "integer",
+                          "examples": [
+                            1
+                          ]
+                        },
+                        "per_page": {
+                          "type": "integer",
+                          "examples": [
+                            20
+                          ]
+                        },
+                        "total": {
+                          "type": "integer",
+                          "examples": [
+                            84
+                          ]
+                        },
+                        "last_page": {
+                          "type": "integer",
+                          "examples": [
+                            5
+                          ]
+                        }
+                      },
+                      "required": [
+                        "current_page",
+                        "per_page",
+                        "total",
+                        "last_page"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "meta"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token lacks the read:user ability.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Insufficient token scope."
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    3600
+                  ]
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    0
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow/{type}/{id}/check": {
+      "get": {
+        "operationId": "checkFollowStatus",
+        "summary": "Check follow status.",
+        "description": "Reports whether the authenticated user currently follows the given entity. An event in a franchise counts as followed when the franchise is.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "title"
+              ],
+              "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
+            },
+            "required": true,
+            "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user).",
+            "name": "type",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                45
+              ],
+              "description": "The ID of the content."
+            },
+            "required": true,
+            "description": "The ID of the content.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    299
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "is_following": {
+                      "type": "boolean",
+                      "examples": [
+                        true
+                      ]
+                    }
+                  },
+                  "required": [
+                    "is_following"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A type that is not followable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Invalid resource type"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token lacks the read:public ability.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Insufficient token scope."
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No live entity of this type has this ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Title not found"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    3600
+                  ]
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    300
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    0
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/user/reading-stats/year": {
       "get": {
         "operationId": "viewYearlyReadingStatistics",
@@ -60484,6 +61567,547 @@
         }
       }
     },
+    "/api/v1/follow": {
+      "post": {
+        "operationId": "followContent",
+        "summary": "Follow content.",
+        "description": "Follows a title, character, podcast, creator, publisher, team, story arc, comic shop, event, event franchise, or user. Following an event that belongs to a franchise follows the franchise too.",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user). An event_franchise is the recurring convention itself, so the follow covers every edition, including ones added later. Following an event that belongs to a franchise follows the franchise too, and unfollowing either clears both.",
+                    "examples": [
+                      "title"
+                    ]
+                  },
+                  "id": {
+                    "type": "integer",
+                    "description": "The ID of the content to follow.",
+                    "examples": [
+                      45
+                    ]
+                  },
+                  "preferences": {
+                    "type": [
+                      "object",
+                      "null"
+                    ],
+                    "properties": {
+                      "email_notifications": {
+                        "type": "boolean",
+                        "description": "Receive email notifications.",
+                        "examples": [
+                          true
+                        ]
+                      },
+                      "push_notifications": {
+                        "type": "boolean",
+                        "description": "Receive push notifications.",
+                        "examples": [
+                          false
+                        ]
+                      }
+                    },
+                    "description": "Notification preferences.",
+                    "examples": [
+                      {
+                        "email_notifications": true,
+                        "push_notifications": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "type",
+                  "id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    149
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "examples": [
+                            "Following title successfully"
+                          ]
+                        },
+                        "is_following": {
+                          "type": "boolean",
+                          "examples": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "message",
+                        "is_following"
+                      ],
+                      "description": "Followed"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "examples": [
+                            "Already following this title"
+                          ]
+                        },
+                        "is_following": {
+                          "type": "boolean",
+                          "examples": [
+                            true
+                          ]
+                        }
+                      },
+                      "required": [
+                        "message",
+                        "is_following"
+                      ],
+                      "description": "Already Following"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token holds neither write:follows nor write:lists, or the profile is private or a block stands between the two members (the body names `code`).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Insufficient token scope."
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No live entity of this type has this ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Title not found"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "The body fails its rules, or the member is following themselves.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    149
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "The type field is required."
+                      ]
+                    },
+                    "errors": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "examples": [
+                        {
+                          "type": [
+                            "The type field is required."
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. This endpoint allows 150/hour (free) or 500/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    3600
+                  ]
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    0
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/follow/{type}/{id}": {
+      "delete": {
+        "operationId": "unfollowContent",
+        "summary": "Unfollow content.",
+        "description": "Stops following the given entity for the authenticated user. Unfollowing an event in a franchise, or the franchise, clears both.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "examples": [
+                "title"
+              ],
+              "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user)."
+            },
+            "required": true,
+            "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user).",
+            "name": "type",
+            "in": "path"
+          },
+          {
+            "schema": {
+              "type": "integer",
+              "examples": [
+                45
+              ],
+              "description": "The ID of the followed content."
+            },
+            "required": true,
+            "description": "The ID of the followed content.",
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    149
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "examples": [
+                            "Unfollowed title successfully"
+                          ]
+                        },
+                        "is_following": {
+                          "type": "boolean",
+                          "examples": [
+                            false
+                          ]
+                        }
+                      },
+                      "required": [
+                        "message",
+                        "is_following"
+                      ],
+                      "description": "Unfollowed"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "examples": [
+                            "Not following this title"
+                          ]
+                        },
+                        "is_following": {
+                          "type": "boolean",
+                          "examples": [
+                            false
+                          ]
+                        }
+                      },
+                      "required": [
+                        "message",
+                        "is_following"
+                      ],
+                      "description": "Not Following"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A type that is not followable.",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    149
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Invalid resource type"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The token holds neither write:follows nor write:lists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Insufficient token scope."
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No live entity of this type has this ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "examples": [
+                        "Title not found"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded. This endpoint allows 150/hour (free) or 500/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "headers": {
+              "Retry-After": {
+                "description": "Seconds to wait before retrying.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    3600
+                  ]
+                }
+              },
+              "X-RateLimit-Limit": {
+                "description": "Request quota per hour for your tier.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    150
+                  ]
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "Requests remaining in the current window.",
+                "schema": {
+                  "type": "integer",
+                  "examples": [
+                    0
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TooManyRequestsError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/lookup/cover": {
       "post": {
         "operationId": "lookUpAnIssueByCoverPhoto",
@@ -62504,1077 +64128,6 @@
         "tags": [
           "Story Arcs"
         ]
-      }
-    },
-    "/api/v1/user/follows": {
-      "get": {
-        "summary": "List follows.",
-        "operationId": "listFollows",
-        "description": "Returns all entities the user is following (titles, characters, podcasts, etc.).",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "per_page",
-            "description": "Items per page (max 100).",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "description": "Items per page (max 100).",
-              "examples": [
-                20
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "type",
-            "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "Only follows of this followable type (the morph alias, e.g. Title, Character, Creator, User).",
-              "examples": [
-                "Character"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "q",
-            "description": "Only follows whose followed entity matches this search (name; username for users).",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "Only follows whose followed entity matches this search (name; username for users).",
-              "examples": [
-                "spider"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "examples": [
-                              789
-                            ]
-                          },
-                          "followable_type": {
-                            "type": "string",
-                            "examples": [
-                              "title"
-                            ]
-                          },
-                          "followable_id": {
-                            "type": "integer",
-                            "examples": [
-                              123
-                            ]
-                          },
-                          "followable": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "integer",
-                                "examples": [
-                                  123
-                                ]
-                              },
-                              "name": {
-                                "type": "string",
-                                "examples": [
-                                  "Spider-Man"
-                                ]
-                              },
-                              "cover_url": {
-                                "type": "string",
-                                "examples": [
-                                  "..."
-                                ]
-                              }
-                            }
-                          },
-                          "created_at": {
-                            "type": "string",
-                            "examples": [
-                              "2024-01-15T10:30:00Z"
-                            ]
-                          }
-                        }
-                      },
-                      "examples": [
-                        [
-                          {
-                            "id": 789,
-                            "followable_type": "title",
-                            "followable_id": 123,
-                            "followable": {
-                              "id": 123,
-                              "name": "Spider-Man",
-                              "cover_url": "..."
-                            },
-                            "created_at": "2024-01-15T10:30:00Z"
-                          }
-                        ]
-                      ]
-                    },
-                    "meta": {
-                      "type": "object",
-                      "properties": {
-                        "current_page": {
-                          "type": "integer",
-                          "examples": [
-                            1
-                          ]
-                        },
-                        "last_page": {
-                          "type": "integer",
-                          "examples": [
-                            1
-                          ]
-                        },
-                        "per_page": {
-                          "type": "integer",
-                          "examples": [
-                            20
-                          ]
-                        },
-                        "total": {
-                          "type": "integer",
-                          "examples": [
-                            12
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "examples": [
-                    {
-                      "data": [
-                        {
-                          "id": 789,
-                          "followable_type": "title",
-                          "followable_id": 123,
-                          "followable": {
-                            "id": 123,
-                            "name": "Spider-Man",
-                            "cover_url": "..."
-                          },
-                          "created_at": "2024-01-15T10:30:00Z"
-                        }
-                      ],
-                      "meta": {
-                        "current_page": 1,
-                        "last_page": 1,
-                        "per_page": 20,
-                        "total": 12
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-            "headers": {
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    299
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
-            "headers": {
-              "Retry-After": {
-                "description": "Seconds to wait before retrying.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    3600
-                  ]
-                }
-              },
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    0
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsError"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/follow/{type}/{id}/check": {
-      "parameters": [
-        {
-          "in": "path",
-          "name": "type",
-          "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user).",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "examples": [
-              "title"
-            ]
-          }
-        },
-        {
-          "in": "path",
-          "name": "id",
-          "description": "The ID of the content.",
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "examples": [
-              45
-            ]
-          }
-        }
-      ],
-      "get": {
-        "summary": "Check follow status.",
-        "operationId": "checkFollowStatus",
-        "description": "Reports whether the authenticated user currently follows the given entity.",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "is_following": {
-                      "type": "boolean",
-                      "examples": [
-                        true
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "is_following": true
-                    }
-                  ]
-                }
-              }
-            },
-            "headers": {
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    299
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
-            "headers": {
-              "Retry-After": {
-                "description": "Seconds to wait before retrying.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    3600
-                  ]
-                }
-              },
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    0
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsError"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/follow": {
-      "post": {
-        "summary": "Follow content.",
-        "operationId": "followContent",
-        "description": "Follows a title, character, podcast, creator, publisher, team, story arc, comic shop, event, event franchise, or user.",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "Following title successfully"
-                      ]
-                    },
-                    "is_following": {
-                      "type": "boolean",
-                      "examples": [
-                        true
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "message": "Following title successfully",
-                      "is_following": true
-                    }
-                  ]
-                }
-              }
-            },
-            "headers": {
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    150
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    149
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Refused",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "This profile is private, so it cannot be followed."
-                      ]
-                    },
-                    "code": {
-                      "type": "string",
-                      "examples": [
-                        "private_profile"
-                      ]
-                    },
-                    "is_following": {
-                      "type": "boolean",
-                      "examples": [
-                        false
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "message": "This profile is private, so it cannot be followed.",
-                      "code": "private_profile",
-                      "is_following": false
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "Title not found"
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "message": "Title not found"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded. This endpoint allows 150/hour (free) or 500/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
-            "headers": {
-              "Retry-After": {
-                "description": "Seconds to wait before retrying.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    3600
-                  ]
-                }
-              },
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    150
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    0
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsError"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "User"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user). An event_franchise is the recurring convention itself, so the follow covers every edition, including ones added later. Following an event that belongs to a franchise follows the franchise too, and unfollowing either clears both.",
-                    "examples": [
-                      "title"
-                    ]
-                  },
-                  "id": {
-                    "type": "integer",
-                    "description": "The ID of the content to follow.",
-                    "examples": [
-                      45
-                    ]
-                  },
-                  "preferences": {
-                    "type": [
-                      "object",
-                      "null"
-                    ],
-                    "description": "Notification preferences.",
-                    "properties": {
-                      "email_notifications": {
-                        "type": "boolean",
-                        "description": "Receive email notifications.",
-                        "examples": [
-                          true
-                        ]
-                      },
-                      "push_notifications": {
-                        "type": "boolean",
-                        "description": "Receive push notifications.",
-                        "examples": [
-                          false
-                        ]
-                      }
-                    },
-                    "examples": [
-                      {
-                        "email_notifications": true,
-                        "push_notifications": false
-                      }
-                    ]
-                  }
-                },
-                "required": [
-                  "type",
-                  "id"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/follow/{type}/{id}": {
-      "parameters": [
-        {
-          "in": "path",
-          "name": "type",
-          "description": "The content type (title, character, podcast, creator, publisher, team, story_arc, comic_shop, event, event_franchise, user).",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "examples": [
-              "title"
-            ]
-          }
-        },
-        {
-          "in": "path",
-          "name": "id",
-          "description": "The ID of the followed content.",
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "examples": [
-              45
-            ]
-          }
-        }
-      ],
-      "delete": {
-        "summary": "Unfollow content.",
-        "operationId": "unfollowContent",
-        "description": "Stops following the given entity for the authenticated user.",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "Unfollowed title successfully"
-                      ]
-                    },
-                    "is_following": {
-                      "type": "boolean",
-                      "examples": [
-                        false
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "message": "Unfollowed title successfully",
-                      "is_following": false
-                    }
-                  ]
-                }
-              }
-            },
-            "headers": {
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    150
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    149
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "examples": [
-                        "Title not found"
-                      ]
-                    }
-                  },
-                  "examples": [
-                    {
-                      "message": "Title not found"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded. This endpoint allows 150/hour (free) or 500/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
-            "headers": {
-              "Retry-After": {
-                "description": "Seconds to wait before retrying.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    3600
-                  ]
-                }
-              },
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    150
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    0
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsError"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "User"
-        ]
-      }
-    },
-    "/api/v1/user/activity": {
-      "get": {
-        "summary": "Get activity feed.",
-        "operationId": "getActivityFeed",
-        "description": "Aggregates recent activity from collections, reads, follows, and reviews.",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "per_page",
-            "description": "Number of results per page (max 100).",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "description": "Number of results per page (max 100).",
-              "examples": [
-                20
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "description": "Page of results to return.",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "description": "Page of results to return.",
-              "examples": [
-                1
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "examples": [
-                              "collection_9921"
-                            ]
-                          },
-                          "type": {
-                            "type": "string",
-                            "examples": [
-                              "collection"
-                            ]
-                          },
-                          "action": {
-                            "type": "string",
-                            "examples": [
-                              "added_to_collection"
-                            ]
-                          },
-                          "created_at": {
-                            "type": "string",
-                            "examples": [
-                              "2026-06-20T14:32:00+00:00"
-                            ]
-                          },
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "issue_id": {
-                                "type": "integer",
-                                "examples": [
-                                  5432
-                                ]
-                              },
-                              "issue_name": {
-                                "type": "string",
-                                "examples": [
-                                  "Amazing Spider-Man #1"
-                                ]
-                              },
-                              "series_name": {
-                                "type": "string",
-                                "examples": [
-                                  "Amazing Spider-Man"
-                                ]
-                              },
-                              "series_start_year": {
-                                "type": "integer",
-                                "examples": [
-                                  2022
-                                ]
-                              },
-                              "cover_url": {
-                                "type": "string",
-                                "examples": [
-                                  "https://r2.versedb.com/uploads/issues/asm-5432/asm-5432-cover_md.webp"
-                                ]
-                              }
-                            }
-                          }
-                        }
-                      },
-                      "examples": [
-                        [
-                          {
-                            "id": "collection_9921",
-                            "type": "collection",
-                            "action": "added_to_collection",
-                            "created_at": "2026-06-20T14:32:00+00:00",
-                            "data": {
-                              "issue_id": 5432,
-                              "issue_name": "Amazing Spider-Man #1",
-                              "series_name": "Amazing Spider-Man",
-                              "series_start_year": 2022,
-                              "cover_url": "https://r2.versedb.com/uploads/issues/asm-5432/asm-5432-cover_md.webp"
-                            }
-                          },
-                          {
-                            "id": "review_312",
-                            "type": "review",
-                            "action": "wrote_review",
-                            "created_at": "2026-06-19T09:10:00+00:00",
-                            "data": {
-                              "review_id": 312,
-                              "issue_id": 5410,
-                              "issue_name": "Batman #135",
-                              "series_name": "Batman",
-                              "series_start_year": 2016,
-                              "rating": 4.5,
-                              "content_preview": "A strong anniversary issue that pays off years of buildup...",
-                              "cover_url": "https://r2.versedb.com/uploads/issues/batman-5410/batman-5410-cover_md.webp"
-                            }
-                          }
-                        ]
-                      ]
-                    },
-                    "meta": {
-                      "type": "object",
-                      "properties": {
-                        "current_page": {
-                          "type": "integer",
-                          "examples": [
-                            1
-                          ]
-                        },
-                        "per_page": {
-                          "type": "integer",
-                          "examples": [
-                            20
-                          ]
-                        },
-                        "total": {
-                          "type": "integer",
-                          "examples": [
-                            84
-                          ]
-                        },
-                        "last_page": {
-                          "type": "integer",
-                          "examples": [
-                            5
-                          ]
-                        }
-                      }
-                    }
-                  },
-                  "examples": [
-                    {
-                      "data": [
-                        {
-                          "id": "collection_9921",
-                          "type": "collection",
-                          "action": "added_to_collection",
-                          "created_at": "2026-06-20T14:32:00+00:00",
-                          "data": {
-                            "issue_id": 5432,
-                            "issue_name": "Amazing Spider-Man #1",
-                            "series_name": "Amazing Spider-Man",
-                            "series_start_year": 2022,
-                            "cover_url": "https://r2.versedb.com/uploads/issues/asm-5432/asm-5432-cover_md.webp"
-                          }
-                        },
-                        {
-                          "id": "review_312",
-                          "type": "review",
-                          "action": "wrote_review",
-                          "created_at": "2026-06-19T09:10:00+00:00",
-                          "data": {
-                            "review_id": 312,
-                            "issue_id": 5410,
-                            "issue_name": "Batman #135",
-                            "series_name": "Batman",
-                            "series_start_year": 2016,
-                            "rating": 4.5,
-                            "content_preview": "A strong anniversary issue that pays off years of buildup...",
-                            "cover_url": "https://r2.versedb.com/uploads/issues/batman-5410/batman-5410-cover_md.webp"
-                          }
-                        }
-                      ],
-                      "meta": {
-                        "current_page": 1,
-                        "per_page": 20,
-                        "total": 84,
-                        "last_page": 5
-                      }
-                    }
-                  ]
-                }
-              }
-            },
-            "headers": {
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    299
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthenticated. The bearer token is missing, invalid, or revoked.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UnauthorizedError"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limit exceeded. This endpoint allows 300/hour (free) or 1,000/hour (PRO). Wait for the number of seconds in the `Retry-After` header before retrying.",
-            "headers": {
-              "Retry-After": {
-                "description": "Seconds to wait before retrying.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    3600
-                  ]
-                }
-              },
-              "X-RateLimit-Limit": {
-                "description": "Request quota per hour for your tier.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    300
-                  ]
-                }
-              },
-              "X-RateLimit-Remaining": {
-                "description": "Requests remaining in the current window.",
-                "schema": {
-                  "type": "integer",
-                  "examples": [
-                    0
-                  ]
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TooManyRequestsError"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "User"
-        ],
-        "deprecated": true
       }
     }
   },
