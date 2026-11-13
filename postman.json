@@ -4257,14 +4257,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"variant_id\": 789\n}",
+              "raw": "{\n    \"read_at\": \"2026-03-01\",\n    \"variant_id\": 789\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Marks an issue (optionally a specific variant) as read with the current timestamp."
+            "description": "Marks an issue (optionally a specific variant) as read. With no `read_at` the read has no date; with one it is dated that day. An issue already read is left as it is, its date included, and the answer gives that date."
           },
           "response": []
         },
@@ -4339,14 +4339,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"read_at\": \"2026-03-01\",\n    \"variant_id\": 789\n}",
+              "raw": "{\n    \"read_at\": \"2026-03-01\",\n    \"undated\": true,\n    \"variant_id\": 789\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert)."
+            "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert).\n`undated: true` clears the date, or creates a read with no date; sending it with `read_at` is a 422."
           },
           "response": []
         },
@@ -4616,14 +4616,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"variant_id\": 42,\n    \"condition\": \"NM\",\n    \"notes\": \"First print, great condition\",\n    \"price_paid\": 3.99,\n    \"format\": \"standard\",\n    \"purchase_source\": \"comic_shop\",\n    \"purchase_store\": \"Third Eye Comics\",\n    \"custom_label\": \"Longbox A / row 3\",\n    \"bagged_at\": \"2024-07-01\",\n    \"personal_rating\": 4.5,\n    \"tags\": [\n        \"key\"\n    ],\n    \"comic_shop_id\": 412,\n    \"acquisition_method\": \"purchase\",\n    \"purchased_at\": \"2024-06-15\",\n    \"storage_location\": \"Long box #3\",\n    \"is_signed\": false,\n    \"signed_by\": \"Stan Lee\",\n    \"is_variant\": false,\n    \"variant_description\": \"Skottie Young baby variant\",\n    \"variant_type\": \"cover_variant\",\n    \"graded\": false,\n    \"grade_score\": \"9.8\",\n    \"grading_company\": \"CGC\",\n    \"grading_number\": \"1234567890\",\n    \"label_type\": \"universal\",\n    \"page_quality\": \"white\",\n    \"grader_notes\": \"Marvel Value Stamp #16 intact\",\n    \"print_number\": \"1st\",\n    \"signature_witness\": \"witnessed_in_person\",\n    \"estimated_value\": 25,\n    \"for_sale\": false,\n    \"status\": \"sold\",\n    \"sold_at\": \"2026-08-14\",\n    \"price_sold\": 40,\n    \"for_trade\": false,\n    \"is_public\": true,\n    \"is_read\": true,\n    \"read_at\": \"2024-06-15\"\n}",
+              "raw": "{\n    \"variant_id\": 42,\n    \"condition\": \"NM\",\n    \"notes\": \"First print, great condition\",\n    \"price_paid\": 3.99,\n    \"format\": \"standard\",\n    \"purchase_source\": \"comic_shop\",\n    \"purchase_store\": \"Third Eye Comics\",\n    \"custom_label\": \"Longbox A / row 3\",\n    \"bagged_at\": \"2024-07-01\",\n    \"personal_rating\": 4.5,\n    \"tags\": [\n        \"key\"\n    ],\n    \"comic_shop_id\": 412,\n    \"acquisition_method\": \"purchase\",\n    \"purchased_at\": \"2024-06-15\",\n    \"storage_location\": \"Long box #3\",\n    \"is_signed\": false,\n    \"signed_by\": \"Stan Lee\",\n    \"is_variant\": false,\n    \"variant_description\": \"Skottie Young baby variant\",\n    \"variant_type\": \"cover_variant\",\n    \"graded\": false,\n    \"grade_score\": \"9.8\",\n    \"grading_company\": \"CGC\",\n    \"grading_number\": \"1234567890\",\n    \"label_type\": \"universal\",\n    \"page_quality\": \"white\",\n    \"grader_notes\": \"Marvel Value Stamp #16 intact\",\n    \"print_number\": \"1st\",\n    \"signature_witness\": \"witnessed_in_person\",\n    \"estimated_value\": 25,\n    \"for_sale\": false,\n    \"status\": \"sold\",\n    \"sold_at\": \"2026-08-14\",\n    \"price_sold\": 40,\n    \"for_trade\": false,\n    \"is_public\": true,\n    \"is_read\": true,\n    \"read_at\": \"2024-06-15\",\n    \"read_undated\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Updates one of the user's copies of the issue: the copy `collection_item_id` names (query or body), else the oldest copy (of the query's `variant_id` cover when one is sent). Only the fields sent change; `tags` replaces the copy's tags. `is_read` and `read_at` set the issue's read status too."
+            "description": "Updates one of the user's copies of the issue: the copy `collection_item_id` names (query or body), else the oldest copy (of the query's `variant_id` cover when one is sent). Only the fields sent change; `tags` replaces the copy's tags. `is_read`, `read_at` and `read_undated` set the issue's read status too: `is_read` with no `read_at` marks it read with no date (an existing read keeps its date)."
           },
           "response": []
         },

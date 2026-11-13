@@ -3558,6 +3558,7 @@
                               "string",
                               "null"
                             ],
+                            "description": "When the issue was read; null when the read has no date.",
                             "examples": [
                               "2024-01-15T10:30:00.000000Z"
                             ]
@@ -47325,7 +47326,7 @@
       "post": {
         "operationId": "markAsRead",
         "summary": "Mark as read.",
-        "description": "Marks an issue (optionally a specific variant) as read with the current timestamp.",
+        "description": "Marks an issue (optionally a specific variant) as read. With no `read_at` the read has no date; with one it is dated that day. An issue already read is left as it is, its date included, and the answer gives that date.",
         "tags": [
           "User"
         ],
@@ -47351,6 +47352,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "read_at": {
+                    "type": "string",
+                    "description": "The day it was read, YYYY-MM-DD, not in the future (optional). Leave it out when the date is unknown.",
+                    "examples": [
+                      "2026-03-01"
+                    ]
+                  },
                   "variant_id": {
                     "type": [
                       "integer",
@@ -47394,6 +47402,16 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "read_at": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "The read's date; null when it has none.",
+                      "examples": [
+                        "2026-03-01T00:00:00+00:00"
+                      ]
+                    },
                     "series_completed": {
                       "type": "object",
                       "properties": {
@@ -47419,7 +47437,10 @@
                       ],
                       "description": "Every live issue of the series is now read."
                     }
-                  }
+                  },
+                  "required": [
+                    "read_at"
+                  ]
                 }
               }
             }
@@ -47477,7 +47498,7 @@
             }
           },
           "422": {
-            "description": "Invalid Variant, a variant that does not exist, or an issue not released yet.",
+            "description": "Invalid Variant, a variant that does not exist, a `read_at` that is not a day up to today, or an issue not released yet.",
             "headers": {
               "X-RateLimit-Limit": {
                 "description": "Request quota per hour for your tier.",
@@ -47617,7 +47638,7 @@
       "patch": {
         "operationId": "editReadingDate",
         "summary": "Edit reading date.",
-        "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert).",
+        "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert).\n`undated: true` clears the date, or creates a read with no date; sending it with `read_at` is a 422.",
         "tags": [
           "User"
         ],
@@ -47651,6 +47672,13 @@
                     "description": "Date in YYYY-MM-DD format, must not be in the future. Pass null to mark as unread.",
                     "examples": [
                       "2026-03-01"
+                    ]
+                  },
+                  "undated": {
+                    "type": "boolean",
+                    "description": "True to clear the date and keep the issue read (optional). Cannot be sent with `read_at`.",
+                    "examples": [
+                      true
                     ]
                   },
                   "variant_id": {
@@ -47697,7 +47725,11 @@
                   "type": "object",
                   "properties": {
                     "read_at": {
-                      "type": "string",
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "The new date; null after `undated`.",
                       "examples": [
                         "2026-03-01T00:00:00+00:00"
                       ]
@@ -47786,7 +47818,7 @@
             }
           },
           "422": {
-            "description": "Invalid Variant, a date after today, or an issue not released yet.",
+            "description": "Invalid Variant, a date after today, `undated` sent with `read_at`, or an issue not released yet.",
             "headers": {
               "X-RateLimit-Limit": {
                 "description": "Request quota per hour for your tier.",
@@ -50599,7 +50631,7 @@
       "patch": {
         "operationId": "updateCollectionItem",
         "summary": "Update collection item.",
-        "description": "Updates one of the user's copies of the issue: the copy `collection_item_id` names (query or body), else the oldest copy (of the query's `variant_id` cover when one is sent). Only the fields sent change; `tags` replaces the copy's tags. `is_read` and `read_at` set the issue's read status too.",
+        "description": "Updates one of the user's copies of the issue: the copy `collection_item_id` names (query or body), else the oldest copy (of the query's `variant_id` cover when one is sent). Only the fields sent change; `tags` replaces the copy's tags. `is_read`, `read_at` and `read_undated` set the issue's read status too: `is_read` with no `read_at` marks it read with no date (an existing read keeps its date).",
         "tags": [
           "User"
         ],
@@ -51007,6 +51039,13 @@
                     "description": "When the issue was read (YYYY-MM-DD). Cannot be in the future. Must be a valid date. Must be a date before or equal to <code>today</code>.",
                     "examples": [
                       "2024-06-15"
+                    ]
+                  },
+                  "read_undated": {
+                    "type": "boolean",
+                    "description": "True to clear the date of the issue's read and keep it read. Cannot be sent with `read_at`.",
+                    "examples": [
+                      true
                     ]
                   }
                 }
