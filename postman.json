@@ -1624,15 +1624,21 @@
               "path": "api/v1/characters/:character_id/series",
               "query": [
                 {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
                   "key": "limit",
                   "value": "20",
                   "description": "Results per page (max 50).",
                   "disabled": true
                 },
                 {
-                  "key": "q",
-                  "value": "batman",
-                  "description": "Optional case-insensitive search within these results.",
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
                   "disabled": true
                 },
                 {
@@ -1644,7 +1650,7 @@
                 {
                   "key": "languages",
                   "value": "ja,ko",
-                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
                   "disabled": true
                 }
               ],
@@ -1666,7 +1672,7 @@
               }
             ],
             "body": null,
-            "description": "Returns paginated series where the character appears."
+            "description": "Returns paginated series where the character appears, newest start year first."
           },
           "response": []
         },
@@ -1678,15 +1684,21 @@
               "path": "api/v1/characters/:character_id/issues",
               "query": [
                 {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
                   "key": "limit",
                   "value": "20",
                   "description": "Results per page (max 50).",
                   "disabled": true
                 },
                 {
-                  "key": "q",
-                  "value": "batman",
-                  "description": "Optional case-insensitive search within these results.",
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
                   "disabled": true
                 },
                 {
@@ -1698,7 +1710,7 @@
                 {
                   "key": "languages",
                   "value": "ja,ko",
-                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
                   "disabled": true
                 }
               ],
@@ -1732,21 +1744,27 @@
               "path": "api/v1/characters/:character_id/teams",
               "query": [
                 {
-                  "key": "limit",
-                  "value": "20",
-                  "description": "Results per page (max 50).",
-                  "disabled": true
-                },
-                {
                   "key": "q",
                   "value": "batman",
                   "description": "Optional case-insensitive search within these results.",
                   "disabled": true
                 },
                 {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
                   "key": "languages",
                   "value": "ja,ko",
-                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
                   "disabled": true
                 }
               ],
@@ -1768,7 +1786,7 @@
               }
             ],
             "body": null,
-            "description": "Returns paginated teams the character is a member of, including membership details."
+            "description": "Returns paginated teams the character is a member of, by name."
           },
           "response": []
         }
@@ -2263,6 +2281,60 @@
           "response": []
         },
         {
+          "name": "Get story arcs for a specific character",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/characters/:character_id/story-arcs",
+              "query": [
+                {
+                  "key": "q",
+                  "value": "batman",
+                  "description": "Optional case-insensitive search within these results.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Results per page (max 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number; meta.last_page says where the list ends.",
+                  "disabled": true
+                },
+                {
+                  "key": "languages",
+                  "value": "ja,ko",
+                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes.",
+                  "disabled": true
+                }
+              ],
+              "raw": "{{baseUrl}}/api/v1/characters/:character_id/story-arcs",
+              "variable": [
+                {
+                  "id": "character_id",
+                  "key": "character_id",
+                  "value": "35939",
+                  "description": "The ID of the character."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns every story arc the given character appears in."
+          },
+          "response": []
+        },
+        {
           "name": "Get story arcs for a specific universe",
           "request": {
             "url": {
@@ -2313,54 +2385,6 @@
             ],
             "body": null,
             "description": "Returns every story arc that takes place in the given universe."
-          },
-          "response": []
-        },
-        {
-          "name": "Get story arcs for a specific character",
-          "request": {
-            "url": {
-              "host": "{{baseUrl}}",
-              "path": "api/v1/characters/:character_id/story-arcs",
-              "query": [
-                {
-                  "key": "q",
-                  "value": "batman",
-                  "description": "Optional case-insensitive search within these results.",
-                  "disabled": true
-                },
-                {
-                  "key": "limit",
-                  "value": "20",
-                  "description": "Number of results per page (max 50).",
-                  "disabled": true
-                },
-                {
-                  "key": "languages",
-                  "value": "ja,ko",
-                  "description": "Keep only these languages in the `_i18n` maps (comma-separated BCP 47 tags). No other field changes, and `Accept-Language` is not read.",
-                  "disabled": true
-                }
-              ],
-              "raw": "{{baseUrl}}/api/v1/characters/:character_id/story-arcs",
-              "variable": [
-                {
-                  "id": "character_id",
-                  "key": "character_id",
-                  "value": "35939",
-                  "description": "The ID of the character."
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "body": null,
-            "description": "Returns every story arc the given character appears in."
           },
           "response": []
         }
@@ -3650,7 +3674,7 @@
                   "key": "image",
                   "type": "file",
                   "src": [],
-                  "description": "A photo of the comic cover: JPEG, PNG, GIF, BMP or WebP, up to 5MB. Must be an image. Must not be greater than 5120 kilobytes."
+                  "description": "A photo of the comic cover: JPEG, PNG, GIF, BMP or WebP, up to 5MB. Must be an image. Must not be greater than 5120 kilobytes. Send it as a file part with a file name (`filename=` in its `Content-Disposition`); a part with no file name is read as text and answered 422."
                 }
               ]
             },
