@@ -4662,7 +4662,7 @@
                 }
               }
             },
-            "description": "Adds a copy of the issue to the user's collection; every field is optional. When the issue was on the user's wishlist it comes off when the user chose that, else `was_on_wishlist` is true so the app can offer it. `follow_up` says whether to offer marking it read or reviewing it."
+            "description": "Adds a copy of the issue to the user's collection; every field is optional. When the issue was on the user's wishlist it comes off when the user chose that, else `was_on_wishlist` is true so the app can offer it. `follow_up` says whether to offer marking it read or reviewing it. Send an `Idempotency-Key` to make a retry safe: for 14 days a repeat with the same key, user and issue answers the copy the first request added, as it is now, and adds nothing."
           },
           "response": []
         },
