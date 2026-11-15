@@ -4247,7 +4247,77 @@
               }
             ],
             "body": null,
-            "description": "Returns all series on the user's pull list (series they're tracking for new releases), most recently added first.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets each entry without\n`personal_notes`, `notify_on_release`, `notification_settings`, `auto_pull`,\n`last_pulled_at`, `preferred_cover_type`, `pull_priority` or the pull source fields."
+            "description": "Returns all series on the user's pull list (series they're tracking for new releases), most recently added first.\n\nNeeds `read:user` or `read:showcase`. A `read:showcase` token gets each entry without\n`personal_notes`, `notify_on_release`, `notification_settings`, `auto_pull`,\n`last_pulled_at`, `preferred_cover_type`, `pull_priority`, the pull source fields or the next issue's covers."
+          },
+          "response": []
+        },
+        {
+          "name": "Get the covers of a pull list issue.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/pull-list/issues/:issue_id/covers",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/pull-list/issues/:issue_id/covers",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": null,
+            "description": "Returns the covers of one issue of a series on the user's pull list: the main cover (the standard cover), then each variant, regular covers first, then ratio covers, then exclusives, each marked `selected` when the user is getting it. A user who has chosen nothing is getting the main cover.\n\nNeeds `read:user`."
+          },
+          "response": []
+        },
+        {
+          "name": "Set the covers of a pull list issue.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/pull-list/issues/:issue_id/covers",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/pull-list/issues/:issue_id/covers",
+              "variable": [
+                {
+                  "id": "issue_id",
+                  "key": "issue_id",
+                  "value": "5432",
+                  "description": "The issue ID."
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"standard\": true,\n    \"variant_ids\": [\n        789\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Sets which covers of one issue the user is getting, replacing any earlier choice for that issue. Only variants of that issue count. Choosing exactly what the series' standing cover choice gives (`updatePullListItem`) clears the issue's own choice, so it follows the series again. Saving also takes the issue out of the user's skipped issues."
           },
           "response": []
         },
@@ -4511,6 +4581,47 @@
             ],
             "body": null,
             "description": "Removes a series from the authenticated user's pull list. Idempotent: returns 204 whether or not the series was on it."
+          },
+          "response": []
+        },
+        {
+          "name": "Update a pull list entry.",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/pull-list/items/:item_id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/pull-list/items/:item_id",
+              "variable": [
+                {
+                  "id": "item_id",
+                  "key": "item_id",
+                  "value": "456",
+                  "description": "The series ID of the pull list entry."
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"active\",\n    \"personal_notes\": \"Trade wait\",\n    \"preferred_cover_type\": \"standard_and_regular\",\n    \"pull_source_ids\": [\n        12\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Changes one series on the authenticated user's pull list: its status, notes, places, or the standing cover choice. The standing choice applies to every issue of the series the user hasn't chosen covers of (see `setPullListIssueCovers`), covers added to the catalog later included: `standard` the main cover; `standard_and_regular` the main cover and every regular cover; `regular` every regular cover without the main one, or the main cover when an issue has none. Ratio and exclusive covers are only ever chosen per issue. Send at least one field."
           },
           "response": []
         },
