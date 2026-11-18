@@ -66780,7 +66780,7 @@
       "post": {
         "operationId": "lookUpAnIssueByCoverPhoto",
         "summary": "Look up an issue by cover photo.",
-        "description": "Upload a photo of a comic cover (bare, bagged or slabbed) as `image`. `clear_match` true means\nthe image match is sure of the issue: `issue_id` is it, and `variant_id` is the cover when the\nmatch also settled which of the issue's covers it is (null is the issue's own cover, or a cover\nit could not tell apart from a same-art sibling such as a newsstand edition). `clear_match`\nfalse means the image was not sure: `issue_id` is null and `candidates` lists up to five\nissues it could be, best first, each at its best-scoring cover. Only the image is compared;\nno text is read off the cover, so a slab label's grade is not returned. Requires the\n`read:public` scope. Rate limited separately from catalog reads: 5/min and 100/day, or\n15/min and 500/day on PRO.",
+        "description": "Upload a photo of a comic cover (bare, bagged or slabbed) as `image`. `clear_match` true means\nthe image match is sure of the issue: `issue_id` is it, and `variant_id` is the cover when the\nmatch also settled which of the issue's covers it is (null is the issue's own cover, or a cover\nit could not tell apart from a same-art sibling such as a newsstand edition). `clear_match`\nfalse means the image was not sure: `issue_id` is null and `candidates` lists up to five\nissues it could be, best first, each at its best-scoring cover. Only the image is compared;\nno text is read off the cover, so a slab label's grade is not returned. Requires the\n`read:public` scope. Rate limited separately from catalog reads: 5/min and 100/day, or\n15/min and 500/day on PRO. A VerseDB Developers key draws on its organization's plan:\n15/min and 2,000/day on Business, 30/min and 10,000/day on Scale.",
         "tags": [
           "Cover Lookup"
         ],
@@ -67331,7 +67331,7 @@
             }
           },
           "429": {
-            "description": "Rate limit exceeded. This endpoint allows 5 a minute and 100 a day (free) or 15 a minute and 500 a day (PRO), and 30 a minute across every caller. Wait for the number of seconds in the `Retry-After` header before retrying.",
+            "description": "Rate limit exceeded. This endpoint allows 5 a minute and 100 a day (free), 15 a minute and 500 a day (PRO), 15 a minute and 2,000 a day (Developers Business) or 30 a minute and 10,000 a day (Developers Scale), and 30 a minute across every caller. Wait for the number of seconds in the `Retry-After` header before retrying.",
             "headers": {
               "Retry-After": {
                 "description": "Seconds to wait before retrying.",
