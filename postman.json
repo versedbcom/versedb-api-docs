@@ -4358,7 +4358,7 @@
                 }
               }
             },
-            "description": "Marks an issue (optionally a specific variant) as read. With no `read_at` the read has no date; with one it is dated that day. An issue already read is left as it is, its date included, and the answer gives that date."
+            "description": "Marks an issue (optionally a specific variant) as read. With no `read_at` the read has no date; with one it is dated that day. An issue already read is left as it is, its date included, and the answer gives that date; with no `variant_id` that holds whichever variant it was read on."
           },
           "response": []
         },
@@ -4399,7 +4399,7 @@
                 }
               }
             },
-            "description": "Removes the read status for an issue (optionally a specific variant)."
+            "description": "Removes the read status for an issue. With no `variant_id`, the read is removed whichever variant it is on; with one, only a read of that variant."
           },
           "response": []
         },
@@ -4440,7 +4440,7 @@
                 }
               }
             },
-            "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert).\n`undated: true` clears the date, or creates a read with no date; sending it with `read_at` is a 422."
+            "description": "Updates the `read_at` date on an existing read entry, or removes the entry when `read_at` is null.\nIf no entry exists yet and a date is provided, one is created (upsert).\n`undated: true` clears the date, or creates a read with no date; sending it with `read_at` is a 422.\nWith no `variant_id`, it edits or removes the read whichever variant it is on."
           },
           "response": []
         },
